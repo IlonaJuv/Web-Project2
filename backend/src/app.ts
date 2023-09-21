@@ -1,10 +1,10 @@
+require('dotenv').config();
 import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import api from './api';
 import cors from 'cors';
 const app = express();
-const port = 3000;
 
 app.use(morgan('dev'));
 app.use(helmet());
@@ -18,6 +18,4 @@ app.get<{}, { msg: string }>('/', (req, res) => {
 
 app.use('/api/', api)
 
-app.listen(port, () => {
-  return console.log(`Express is listening at http://localhost:${port}`);
-});
+export default app;
