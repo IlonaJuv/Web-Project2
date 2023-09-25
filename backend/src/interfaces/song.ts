@@ -5,6 +5,7 @@ interface Song extends Document {
     thumbnail: string;
     artist: string;
     album: string;
+    genres: string[];
 }
 
 export {Song}
