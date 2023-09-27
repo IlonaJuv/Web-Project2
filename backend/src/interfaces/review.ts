@@ -1,6 +1,6 @@
 import {Document} from 'mongoose';
 import {Song} from './song';
-import {User} from './User';
+import {User} from './user';
 interface Review extends Document {
     likes: number;
     song: Song;
