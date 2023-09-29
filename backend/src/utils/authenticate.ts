@@ -8,7 +8,6 @@ export default async (req: Request) => {
     return {
       id: '',
       token: '',
-      role: '',
     };
   }
 
@@ -18,7 +17,6 @@ export default async (req: Request) => {
     return {
       id: '',
       token: '',
-      role: '',
     };
   }
 
@@ -31,7 +29,6 @@ export default async (req: Request) => {
     return {
       id: '',
       token: '',
-      role: '',
     };
   }
 

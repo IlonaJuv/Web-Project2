@@ -39,10 +39,7 @@ const loginPost = async (
       return;
     }
 
-    const token = jwt.sign(
-      {id: user._id, role: user.role},
-      process.env.JWT_SECRET as string
-    );
+    const token = jwt.sign({id: user._id}, process.env.JWT_SECRET as string);
 
     const message: LoginMessageResponse = {
       message: 'Login successful',

@@ -26,7 +26,6 @@ const userPost = async (
 
     const user = req.body;
     user.password = await bcrypt.hash(user.password, 12);
-    user.role = 'user';
 
     const newUser = await userModel.create(user);
     const response: DBMessageResponse = {
@@ -47,7 +46,7 @@ const userPost = async (
 const userListGet = async (req: Request, res: Response, next: NextFunction) => {
   try {
     console.log('userListGet');
-    const users = await userModel.find().select('-password -role -__v');
+    const users = await userModel.find().select('-password -__v');
     const response: DBMessageResponse = {
       message: 'Users found',
       data: users,
@@ -68,7 +67,7 @@ const userGet = async (
 
     const user = await userModel
       .findById(req.params.id)
-      .select('-password -role -__v');
+      .select('-password -__v');
     if (!user) {
       next(new CustomError('User not found', 404));
       return;

@@ -5,19 +5,18 @@ import { User } from "../../interfaces/user";
 export default {
     Query: {
         users: async () => {
-            console.log("users")
-          const users = await fetchData(
-            `${process.env.AUTH_URL}/users`
-          );
-          console.log(users);
-          return users;
-        },
+              const users = await fetchData<LoginMessageResponse>(
+                `${process.env.AUTH_URL}/users`
+              );
+              console.log("userResolver users: ", users)
+              return users;
+          },
         userById: async (_parent: undefined, args: {id: string}) => {
             console.log("userbyid")
             const user = await fetchData<LoginMessageResponse>(
               `${process.env.AUTH_URL}/users/${args.id}`
             );
-            console.log(user)
+            console.log("userByID, ", user)
             return user;
           },
       },
@@ -37,7 +36,6 @@ export default {
             );
             return user;
           },
-          // args: User - jolloin optionsiin tulee user objekti eikä refactoroitu käyttäjänimee yms erikseen
           register: async (_parent: undefined, args: {user: Omit<User, 'role'>}) => {
             console.log("register")
             const options: RequestInit = {
@@ -52,7 +50,7 @@ export default {
             );
             console.log('Register user', user);
       
-            return user.message;
+            return user;
           },
       }
 };
