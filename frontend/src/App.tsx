@@ -13,45 +13,52 @@ const SearchBar = (props: any ) => {
   );
 }
 
-const SongCard = (props: {title: string}) => {
-  return(
+const SongCard = (props: {title: string, picture: string, artist: string}) => {
+  return (
     <div className="song-card">
       <h1>{props.title}</h1>
+      <img src={props.picture} alt={props.title} />
+      <p>Artist: {props.artist}</p>
     </div>
-  )
-}
+  );
+};
+
+export type Song = {
+  title: string;
+  picture: string;
+  artist: string;
+};
+
+
 
 
 function App() {
 
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [songList, setSongList] = useState([""]);
-
-  useEffect(() => {
-    setSongList(songList)
-  });
+  const [songList, setSongList] = useState<Song[]>([]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.value);
     setSearchQuery(event.target.value);
     console.log(songList)
   }
-  
+
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     fetch(`${process.env.REACT_APP_API_URL}/deezer/${searchQuery}`)
       .then((res) => res.json())
       .then((response) => {
-        let result = [""];
-        for (let i = 0; i < response.data.length; i++) {
-          result.push(response.data[i].title);
-        }
+        const result = response.data.map((song: any) => ({
+          title: song.title,
+          picture: song.album.cover_medium,
+          artist: song.artist.name,
+        }));
         setSongList(result);
-        setSearchQuery("");
+        setSearchQuery('');
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       });
   };
   return (
@@ -61,7 +68,7 @@ function App() {
         <ul className="list-unstyled">
           {songList.map((song) => (
             <li>
-              <SongCard key={song} title={song}/>
+              <SongCard key={song.title} title={song.title} picture={song.picture} artist={song.artist}/>
             </li>
           ))}
         </ul>
