@@ -1,7 +1,8 @@
 import LoginMessageResponse from "../../interfaces/LoginMessageResponse";
 import fetchData from "../../utils/fetchData";
-import { User } from "../../interfaces/user";
+import { User, UserIdWithToken } from "../../interfaces/user";
 import AuthMessageResponse from "../../interfaces/AuthMessageResponse";
+import { GraphQLError } from "graphql";
 
 export default {
     Query: {
@@ -9,7 +10,6 @@ export default {
               const users = await fetchData<AuthMessageResponse>(
                 `${process.env.AUTH_URL}/users`
               );
-              console.log("userResolver users: ", users)
               return users.data;
           },
         userById: async (_parent: undefined, args: {id: string}) => {
@@ -17,11 +17,10 @@ export default {
             const user = await fetchData<AuthMessageResponse>(
               `${process.env.AUTH_URL}/users/${args.id}`
             );
-            console.log("userByID, ", user)
             return user.data;
           },
       },
-      Mutation: {
+    Mutation: {
         login: async (
             _parent: undefined,
             args: {email: string; password: string}
@@ -37,7 +36,7 @@ export default {
             );
             return user;
           },
-          register: async (_parent: undefined, args: {user: User}) => {
+        register: async (_parent: undefined, args: {user: User}) => {
             console.log("register")
             const options: RequestInit = {
               method: 'POST',
@@ -49,9 +48,53 @@ export default {
               `${process.env.AUTH_URL}/users`,
               options
             );
-            console.log('Register user', user);
       
             return user;
+        },
+        updateUser: async (
+          _parent: undefined,
+          args: {user: User},
+          user: UserIdWithToken
+         ) => {
+             if (!user.token) {
+              throw new GraphQLError('You are not authorized to perform this action');
+            }
+            const options: RequestInit = {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${user.token}`,
+              },
+              body: JSON.stringify(args.user),
+            };
+      
+            const response = await fetchData<LoginMessageResponse>(
+              `${process.env.AUTH_URL}/users`,
+              options
+            );
+            return response;
+          },
+        deleteUser: async (
+            _parent: undefined,
+            args: undefined,
+            user: UserIdWithToken
+          ) => {
+            if (!user.token) {
+              throw new GraphQLError('You are not authorized to perform this action');
+            }
+            const options: RequestInit = {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${user.token}`,
+              },
+            };
+      
+            const response = await fetchData<LoginMessageResponse>(
+              `${process.env.AUTH_URL}/users`,
+              options
+            );
+            return response;
           },
       }
 };

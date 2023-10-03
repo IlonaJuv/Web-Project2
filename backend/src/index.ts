@@ -4,7 +4,6 @@ import mongoConnect from './utils/DB';
 const port = process.env.PORT || 3000;
 (async () => {
   try {
-    console.log("index")
     await mongoConnect();
     app.listen(port, () => {
       /* eslint-disable no-console */

@@ -12,6 +12,7 @@ import {
     ApolloServerPluginLandingPageLocalDefault,
     ApolloServerPluginLandingPageProductionDefault,
   } from '@apollo/server/plugin/landingPage/default';
+import authenticate from './utils/authenticate';
 const app = express();
 
 (async () => {
@@ -46,10 +47,9 @@ const app = express();
         '/graphql',
         cors<cors.CorsRequest>(),
         express.json(),
-        expressMiddleware(server)
-        /*  expressMiddleware(server, {
+        expressMiddleware(server, {
         context: async ({req}) => authenticate(req),
-      }) */
+      }) 
       );
   
       
