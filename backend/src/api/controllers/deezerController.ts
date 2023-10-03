@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from 'express';
 import got from 'got';
-const getDeezer = async (req: Request, res: Response, next: NextFunction) => {
+const getDeezerSongs = async (req: Request, res: Response, next: NextFunction) => {
     try {
         console.log(req.params.query)
     const deezerApiUrl = 'https://api.deezer.com/search';
@@ -18,4 +18,4 @@ const getDeezer = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
-export { getDeezer };
+export { getDeezerSongs };
