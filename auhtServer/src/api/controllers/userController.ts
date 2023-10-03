@@ -1,10 +1,12 @@
 import {Request, Response, NextFunction} from 'express';
 import CustomError from '../../classes/CustomError';
-import {User} from '../../interfaces/User';
+import {OutputUser, User} from '../../interfaces/User';
 import {validationResult} from 'express-validator';
 import userModel from '../models/userModel';
 import bcrypt from 'bcrypt';
 import DBMessageResponse from '../../interfaces/DBMessageResponse';
+import LoginMessageResponse from '../../interfaces/LoginMessageResponse';
+const salt = bcrypt.genSaltSync(12);
 
 const userPost = async (
   req: Request<{}, {}, User>,
@@ -25,7 +27,7 @@ const userPost = async (
     }
 
     const user = req.body;
-    user.password = await bcrypt.hash(user.password, 12);
+    user.password = await bcrypt.hash(user.password, salt);
 
     const newUser = await userModel.create(user);
     const response: DBMessageResponse = {
@@ -83,4 +85,66 @@ const userGet = async (
   }
 };
 
-export {userPost, userListGet, userGet};
+const userPut = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userFromToken: OutputUser = res.locals.user as OutputUser;
+    const userId = userFromToken.id;
+
+    const user: User = req.body as User;
+    if (user.password) {
+      user.password = await bcrypt.hash(user.password, salt);
+    }
+
+    const result: User = (await userModel
+      .findByIdAndUpdate(userId, user, {new: true})
+      .select('-password -role')) as User;
+
+    if (!result) {
+      next(new CustomError('User not found', 404));
+      return;
+    }
+
+    const response: LoginMessageResponse = {
+      message: 'User updated',
+      user: {
+        username: result.username,
+        email: result.email,
+        id: result._id,
+      },
+    };
+
+    res.json(response);
+  } catch (error) {
+    next(new CustomError((error as Error).message, 500));
+  }
+};
+
+const userDelete = async (
+  req: Request,
+  res: Response<{}, {user: OutputUser}>,
+  next: NextFunction
+) => {
+  try {
+    const user = res.locals.user;
+    const result: User = (await userModel.findByIdAndDelete(user.id)) as User;
+    if (!result) {
+      next(new CustomError('User not found', 404));
+      return;
+    }
+
+    const response: LoginMessageResponse = {
+      message: 'User deleted',
+      user: {
+        username: result.username,
+        email: result.email,
+        id: result._id,
+      },
+    };
+
+    res.json(response);
+  } catch (error) {
+    next(new CustomError('User deletion failed', 500));
+  }
+};
+
+export {userPost, userListGet, userGet, userPut, userDelete};
