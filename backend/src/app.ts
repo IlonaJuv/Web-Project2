@@ -40,12 +40,16 @@ const app = express();
         includeStacktraceInErrorResponses: false,
       });
       await server.start();
+
       app.use('/api/', api);
       app.use(
         '/graphql',
         cors<cors.CorsRequest>(),
         express.json(),
         expressMiddleware(server)
+        /*  expressMiddleware(server, {
+        context: async ({req}) => authenticate(req),
+      }) */
       );
   
       
