@@ -1,0 +1,37 @@
+scalar DateTime
+
+type Review {
+  id: ID!
+  likes: Int!
+  rating: Float!
+  title: String!
+  comment: String!
+  user: User!
+  song: song!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Query {
+  reviews: [Review]
+  reviewById(id: ID!): Review
+  reviewsBySong(songId: ID!): [Review]
+  reviewsByUser(userId: ID!): [Review]
+}
+
+type Mutation {
+  createReview(
+    rating: Float!
+    comment: String!
+    title: String!
+    song: ID!
+  ): Review
+  updateReview(
+    id: ID!
+    rating: Float
+    comment: String
+    title: String
+    likes: Int
+  ): Review
+  deleteReview(id: ID!): Review
+}

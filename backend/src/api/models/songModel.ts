@@ -6,7 +6,8 @@ const songSchema = new Schema<Song>({
     thumbnail: {type: String, required: true},
     artist: {type: String, required: true},
     album: {type: String, required: true},
-    genres: {type: [String], required: true}
+    genres: {type: [String], required: true},
+    api_id: {type: Number, required: true},
 });
 
 export default model<Song>('Song', songSchema);

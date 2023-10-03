@@ -6,6 +6,7 @@ interface Song extends Document {
     artist: string;
     album: string;
     genres: string[];
+    api_id: number;
 }
 
 export {Song}

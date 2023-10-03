@@ -1,8 +1,15 @@
+import { Review } from "../../interfaces/review";
 import { Song } from "../../interfaces/song";
 import songModel from "../models/songModel";
 
 export default {
- Query: {
+    Review: {
+        song: async (parent: Review) => {
+        const song = await songModel.findById(parent.song);
+        return song;
+        },
+    },
+    Query: {
     songs: async () => {
      try {
         console.log("songs")
@@ -18,7 +25,7 @@ export default {
         throw new Error(error);
      }
     },
-     },
+    },
     Mutation: {
         addSong: async (_parent: undefined, args: Song) => {
         try {
