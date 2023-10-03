@@ -1,9 +1,9 @@
-//import reviewResolver from './reviewResolver';
+import reviewResolver from './reviewResolver';
 import songResolver from './songResolver';
 import userResolver from './userResolver';
 
 export default [
-    //reviewResolver,
+    reviewResolver,
     songResolver,
     userResolver,
 ];

@@ -3,8 +3,17 @@ import fetchData from "../../utils/fetchData";
 import { User, UserIdWithToken } from "../../interfaces/user";
 import AuthMessageResponse from "../../interfaces/AuthMessageResponse";
 import { GraphQLError } from "graphql";
+import { Review } from "../../interfaces/review";
 
 export default {
+    Review: {
+        user: async (parent: Review) => {
+            const user = await fetchData<AuthMessageResponse>(
+              `${process.env.AUTH_URL}/users/${parent.user}`
+            );
+            return user.data;
+          },
+      },
     Query: {
         users: async () => {
               const users = await fetchData<AuthMessageResponse>(

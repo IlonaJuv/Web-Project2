@@ -7,7 +7,9 @@ interface Review extends Document {
     user: User | Types.ObjectId;
     rating: number;
     comment: string;
-    date: Date;
+    title: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export {Review}

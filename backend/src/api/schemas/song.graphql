@@ -5,6 +5,7 @@ type song {
   artist: String
   album: String
   genres: [String]
+  api_id: Int
 }
 
 type Query {
@@ -19,6 +20,7 @@ type Mutation {
     artist: String!
     album: String!
     genres: [String]!
+    api_id: Int!
   ): song
   updateSong(
     id: ID!
@@ -27,6 +29,7 @@ type Mutation {
     artist: String
     album: String
     genres: [String]
+    api_id: Int
   ): song
   deleteSong(id: ID!): song
 }
