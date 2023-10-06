@@ -14,14 +14,17 @@ export const useLogin = () => {
         try {
             const API_URL = process.env.REACT_APP_API_URL
             const loginUserMutation = gql`
-                mutation login($email: String!, $password: String!)) {
+                mutation login($email: String!, $password: String!) {
                     login(email: $email, password: $password) {
+                        message
+                        token
                         user {
                             id
                             username
                             email
                         }
                     }
+                }
                 `;
             const graphQLClient = new GraphQLClient(API_URL || "", {
             });
@@ -29,9 +32,9 @@ export const useLogin = () => {
                 email: email,
                 password: password
             };
+            console.log(loginUserMutation);
             const data = await graphQLClient.request(loginUserMutation, variables);
             if (typeof data === 'object' && data !== null && 'login' in data) {
-                console.log("Reached this point");
                 const response = data.login;
                 localStorage.setItem('user', JSON.stringify(response));
                 dispatch({type: 'LOGIN', payload: response});
