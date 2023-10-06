@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 import { GraphQLClient, gql } from "graphql-request";
-import { request } from "graphql-request";
 
 export const useLogin = () => {
     const [error, setError] = useState(null);
@@ -16,8 +15,6 @@ export const useLogin = () => {
             const loginUserMutation = gql`
                 mutation login($email: String!, $password: String!) {
                     login(email: $email, password: $password) {
-                        message
-                        token
                         user {
                             id
                             username
@@ -34,14 +31,12 @@ export const useLogin = () => {
             };
             console.log(loginUserMutation);
             const data = await graphQLClient.request(loginUserMutation, variables);
-            if (typeof data === 'object' && data !== null && 'login' in data) {
-                const response = data.login;
-                localStorage.setItem('user', JSON.stringify(response));
-                dispatch({type: 'LOGIN', payload: response});
-                setIsLoading(false);
-              } else {
-                console.error('Invalid data format:', data);
-              }
+            const response: any = data;
+            console.log(response.login.user);
+            localStorage.setItem('user', JSON.stringify(response.login.user));
+            console.log(localStorage.getItem('user'));
+            dispatch({type: 'LOGIN', payload: response.login.user});
+            setIsLoading(false);
         } catch (error: any) {
             setError(error);
         } finally {

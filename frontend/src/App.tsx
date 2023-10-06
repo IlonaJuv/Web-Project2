@@ -6,6 +6,7 @@ import SongSearch from './pages/SongSearch';
 
 function App() {
   const user = useAuthContext();
+  console.log(user)
 
   return (
     <HashRouter>
