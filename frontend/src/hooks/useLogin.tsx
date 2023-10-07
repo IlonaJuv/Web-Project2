@@ -32,9 +32,9 @@ export const useLogin = () => {
             console.log(loginUserMutation);
             const data = await graphQLClient.request(loginUserMutation, variables);
             const response: any = data;
-            console.log(response.login.user);
+            console.log("iselogin user ", response.login.user);
             localStorage.setItem('user', JSON.stringify(response.login.user));
-            console.log(localStorage.getItem('user'));
+            console.log(localStorage.getItem('user'), "useer locla storage");
             dispatch({type: 'LOGIN', payload: response.login.user});
             setIsLoading(false);
         } catch (error: any) {

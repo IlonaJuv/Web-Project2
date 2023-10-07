@@ -3,12 +3,36 @@ import { useEffect, useState } from 'react'
 import logo from './logo.svg';
 import '../css/App.css'
 
+import { useLogout } from "../hooks/useLogout";
+
+/*
+function LogoutButton() {
+
+  return (
+    <div>
+      <button onClick={logout} disabled={isLoading}>
+        {isLoading ? "Logging out..." : "Logout"}
+      </button>
+      {error && <p>Error: {error.message}</p>}
+    </div>
+  );
+}
+
+export default LogoutButton;*/
+
+
 const SearchBar = (props: any ) => {
+  const { logout, error, isLoading } = useLogout();
+
   return (
     <div>
       <form className="col-20 col-lg-auto mb-3 mb-lg-0 me-lg-3 mt-3" role="search" id="search-form" onSubmit={props.handleSearchSubmit}>
-        <input type="search" value={props.searchQuery} className="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search" id="search-input" onChange={props.handleSearchChange}/>
+        <input type="search" value={props.searchQuery} className="form-control form-control-dark text-bg-dark" placeholder="Search..."
+         aria-label="Search" id="search-input" onChange={props.handleSearchChange}/> 
       </form>
+      <button onClick={logout} disabled={isLoading}>
+          {isLoading ? "Logging out..." : "Logout"}
+        </button>
     </div>
   );
 }
