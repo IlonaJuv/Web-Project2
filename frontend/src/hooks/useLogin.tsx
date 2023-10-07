@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 import { GraphQLClient, gql } from "graphql-request";
+import User from "../interfaces/User";
+
+export interface LoginResponse {
+    login: {
+        user: User
+    }
+}
 
 export const useLogin = () => {
     const [error, setError] = useState(null);
@@ -22,21 +29,22 @@ export const useLogin = () => {
                         }
                     }
                 }
-                `;
-            const graphQLClient = new GraphQLClient(API_URL || "", {
-            });
+            `;
+            const graphQLClient = new GraphQLClient(API_URL || "", {});
             const variables = {
                 email: email,
                 password: password
             };
             console.log(loginUserMutation);
-            const data = await graphQLClient.request(loginUserMutation, variables);
-            const response: any = data;
-            console.log(response.login.user);
-            localStorage.setItem('user', JSON.stringify(response.login.user));
+            const data: LoginResponse = await graphQLClient.request(loginUserMutation, variables);
+            const json = JSON.stringify(data);
+            const response: User = data.login.user;
+            localStorage.setItem('user', JSON.stringify(response));
             console.log(localStorage.getItem('user'));
-            dispatch({type: 'LOGIN', payload: response.login.user});
-            setIsLoading(false);
+            if(response != null) {
+                dispatch({type: 'LOGIN', payload: json});
+                setIsLoading(false);
+            }
         } catch (error: any) {
             setError(error);
         } finally {
