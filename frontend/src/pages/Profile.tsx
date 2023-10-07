@@ -50,7 +50,11 @@ const ProfilePage: React.FC = () => {
                         <div className="col-sm-4 d-flex justify-content-center">
                             <div className="card">
                                 <div className="card-body lh-1">
-                                  <img className="img-thumbnail" src={review.song.thumbnail} alt={review.song.song_name} />
+                                  {review.song.thumbnail ? (
+                                    <img src={review.song.thumbnail} className="card-img-top" alt={review.song.song_name} />
+                                  ) : (
+                                    <img src="not_found.png" className="card-img-top" alt="..." />
+                                  )}
                                     <h4 className="card-text mt-">{review.song.song_name}</h4>
                                     <p className="card-text">{review.song.artist}</p>
                                     <div className="d-flex gap-2">
