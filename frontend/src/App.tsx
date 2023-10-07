@@ -9,7 +9,12 @@ import { useEffect } from 'react';
 function App() {
   const authContext = useAuthContext();
   const user: User = authContext.user;
-
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if(user !== null) {
+        authContext.dispatch({type: 'LOGIN', payload: user});
+    }
+  });
   return (
     <HashRouter>
           <Routes>
