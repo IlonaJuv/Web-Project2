@@ -5,8 +5,11 @@ import User from "../interfaces/User";
 
 export interface LoginResponse {
     login: {
+        token: string
         user: User
     }
+    
+
 }
 
 export const useLogin = () => {
@@ -20,15 +23,17 @@ export const useLogin = () => {
         try {
             const API_URL = process.env.REACT_APP_API_URL
             const loginUserMutation = gql`
-                mutation login($email: String!, $password: String!) {
-                    login(email: $email, password: $password) {
-                        user {
-                            id
-                            username
-                            email
-                        }
-                    }
+            mutation Login($email: String!, $password: String!) {
+                login(email: $email, password: $password) {
+                  token
+                  message
+                  user {
+                    id
+                    username
+                    email
+                  }
                 }
+              }
             `;
             const graphQLClient = new GraphQLClient(API_URL || "", {});
             const variables = {
@@ -39,8 +44,12 @@ export const useLogin = () => {
             const data: LoginResponse = await graphQLClient.request(loginUserMutation, variables);
             const json = JSON.stringify(data);
             const response: User = data.login.user;
+            const token: string = data.login.token;
             localStorage.setItem('user', JSON.stringify(response));
+            localStorage.setItem('token', token);
             console.log(localStorage.getItem('user'));
+            console.log(localStorage.getItem('token'));
+            
             if(response != null) {
                 dispatch({type: 'LOGIN', payload: json});
                 setIsLoading(false);

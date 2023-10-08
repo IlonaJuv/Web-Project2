@@ -4,8 +4,9 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Welcome from "../components/Welcome/Welcome"
+import RegisterForm from "../components/Register/RegisterForm";
 
-const Login = () => {
+const Register = () => {
 
     return (
       <>
@@ -15,7 +16,7 @@ const Login = () => {
             <Welcome />
           </Col>
           <Col xs={12} md={6}>
-            <LoginForm />
+            <RegisterForm />
           </Col>
         </Row>
       </Container>
@@ -24,4 +25,4 @@ const Login = () => {
 
 }
 
-export default Login;
+export default Register;

@@ -3,12 +3,22 @@ import { useEffect, useState } from 'react'
 import logo from './logo.svg';
 import '../css/App.css'
 
+import { useLogout } from "../hooks/useLogout";
+
+
+
 const SearchBar = (props: any ) => {
+  const { logout, error, isLoading } = useLogout();
+
   return (
     <div>
       <form className="col-20 col-lg-auto mb-3 mb-lg-0 me-lg-3 mt-3" role="search" id="search-form" onSubmit={props.handleSearchSubmit}>
-        <input type="search" value={props.searchQuery} className="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search" id="search-input" onChange={props.handleSearchChange}/>
+        <input type="search" value={props.searchQuery} className="form-control form-control-dark text-bg-dark" placeholder="Search..."
+         aria-label="Search" id="search-input" onChange={props.handleSearchChange}/> 
       </form>
+      <button onClick={logout} disabled={isLoading}>
+          {isLoading ? "Logging out..." : "Logout"}
+        </button>
     </div>
   );
 }
@@ -46,7 +56,7 @@ const SongSearch = () => {
 
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    fetch(`${process.env.REACT_APP_DEEZER_URL}/deezer/${searchQuery}`)
+    fetch(`${process.env.REACT_APP_DEEZER_DEEZER_URL}/deezer/${searchQuery}`)
       .then((res) => res.json())
       .then((response) => {
         const result = response.data.map((song: any) => ({
