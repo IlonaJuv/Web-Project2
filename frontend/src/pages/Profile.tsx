@@ -14,7 +14,6 @@ const ProfilePage: React.FC = () => {
     async function fetchUserData() {
       try {
         const userData = await getUser(userId || '');
-        console.log(userId);
         setUser(userData);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -42,41 +41,46 @@ const ProfilePage: React.FC = () => {
       {user ? (
         <div>
           <h1 className="text-center">{user.username}'s profile</h1>
-            <h2 className="text-center">Reviews</h2>
-            {reviews ? (
-                <div className="container">
-                <div className="row justify-content-center">
-                    {reviews.map((review) => (
-                        <div className="col-sm-4 d-flex justify-content-center">
-                            <div className="card">
-                                <div className="card-body lh-1">
-                                  {review.song.thumbnail ? (
-                                    <img src={review.song.thumbnail} className="card-img-top" alt={review.song.song_name} />
-                                  ) : (
-                                    <img src="not_found.png" className="card-img-top" alt="..." />
-                                  )}
-                                    <h4 className="card-text mt-">{review.song.song_name}</h4>
-                                    <p className="card-text">{review.song.artist}</p>
-                                    <div className="d-flex gap-2">
-                                        {review.song.genres.map((genre) => (
-                                            <p className="card-text mr-5">{genre}</p>
-                                        ))}
-                                    </div>
-                                    <h4 className="card-title mt-4">{review.title}</h4>
-                                    <p className="card-text">{review.comment}</p>
-                                    <h4 className="card-text"> {review.rating}/5</h4>
-                                </div>
-                            </div>
+          <h2 className="text-center">Reviews</h2>
+          {reviews.length > 0 ? (
+            <div className="container">
+              <div className="row justify-content-center">
+                {reviews.map((review, index) => (
+                  <div key={index} className="col-md-3 mb-3">
+                    <div className="card">
+                      <div className="card-body card-fixed-height">
+                          <img
+                            src={review.song.thumbnail}
+                            className="card-img-top mb-3"
+                            alt={review.song.song_name}
+                            style={{ width: '100%', height: '250px', objectFit: 'cover' }}
+                            onError={({currentTarget}) => {
+                              currentTarget.onerror = null;
+                              currentTarget.src = "not_found.png"
+                            }}
+                          />
+                        <h4 className="card-title">{review.song.song_name}</h4>
+                        <p className="card-text mb-1">{review.song.artist}</p>
+                        <div className="d-flex gap-2">
+                          {review.song.genres.map((genre, genreIndex) => (
+                            <p key={genreIndex} className="card-text mr-3">{genre}</p>
+                          ))}
                         </div>
-                    ))}
-                </div>
-        </div>
-            ) : (
-                <p>No reviews found...</p>
-            )}
+                        <h4 className="card-text mt-4">{review.title}</h4>
+                        <p className="card-text">{review.comment}</p>
+                        <h4 className="card-text">{review.rating}/5</h4>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p className="text-center">No reviews found...</p>
+          )}
         </div>
       ) : (
-        <p>Loading...</p>
+        <p className="text-center">Loading...</p>
       )}
     </div>
   );
