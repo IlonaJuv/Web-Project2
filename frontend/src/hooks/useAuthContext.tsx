@@ -1,7 +1,7 @@
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 
-export const useAuthContext = () => {
+const useAuthContext = () => {
     const context = useContext(AuthContext);
     console.log("useAuthContext", context)
     if(context === undefined) {
@@ -9,3 +9,5 @@ export const useAuthContext = () => {
     }
     return context || {};
 }
+
+export { useAuthContext };

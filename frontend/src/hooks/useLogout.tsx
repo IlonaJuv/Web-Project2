@@ -26,7 +26,6 @@ export const useLogout = () => {
             
             // Dispatch the 'LOGOUT' action to update the user state to null
             dispatch({ type: 'LOGOUT' });
-            
             setIsLoading(false);
         } catch (error: any) {
             setError(error);

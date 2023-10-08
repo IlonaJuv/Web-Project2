@@ -46,7 +46,6 @@ export default {
             return user;
           },
         register: async (_parent: undefined, args: {user: User}) => {
-            console.log("register")
             const options: RequestInit = {
               method: 'POST',
               headers: {'Content-Type': 'application/json'},

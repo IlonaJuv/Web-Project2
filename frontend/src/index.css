@@ -6,10 +6,37 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  align-items: flex-start;
+  min-width: 320px;
+  min-height: 100vh;
   background-color: #212529 !important;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+:root {
+  --text-color: #242424;
+  --background: rgba(255, 255, 255, 0.87);
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+  /*color: var(text-color); */
+}
+
+
+
+html {
+  font-size: 16px;
+}
+#root {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }

@@ -1,59 +1,40 @@
-/*import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useAuthContext } from './hooks/useAuthContext';
-import Login from './pages/Login';
-
-import SongSearch from './pages/SongSearch';
-
-function App() {
-  const user = useAuthContext();
-  console.log("app use authcontext user: ", user)
-
-  return (
-    <HashRouter>
-          <Routes>
-            <Route 
-              path="/" 
-              element={user ? <SongSearch /> : <Navigate to="/login" />} 
-            />
-            <Route 
-              path="/login" 
-              element={!user ? <Login /> : <Navigate to="/" />} 
-            />
-          </Routes>
-      </HashRouter>
-  );
-}
-
-export default App;*/
-import { useEffect } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthContext } from './hooks/useAuthContext';
 import Login from './pages/Login';
-import SongSearch from './pages/SongSearch';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from "react-redux";
+import User from './interfaces/User';
+import Register from './pages/Register';
+import './css/App.css';
 
+import SongSearch from './pages/SongSearch';
+import { useEffect } from 'react';
 
 function App() {
-  const { user } = useAuthContext()
-  const token = useSelector((state) => state.auth.token);
-  ;
+  const authContext = useAuthContext();
+  const user: User = authContext.user;
+  
 
-
-return (
-  <HashRouter>
-    <Routes>
-      <Route
-        path="/"
-        element={user? <SongSearch /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/login"
-        element={!user ? <Login /> : <Navigate to="/" />}
-      />
-    </Routes>
-  </HashRouter>
-);
+  return (
+    <div className="app">
+    <HashRouter>
+      <div className="main_container">
+          <Routes>
+            <Route 
+              path="/" 
+              element={user != null && user.id != null? <SongSearch /> : <Navigate to="/login" />} 
+            />
+            <Route 
+              path="/login" 
+              element={!(user != null && user.id != null) ? <Login /> : <Navigate to="/" />} 
+            />
+             <Route
+                path="/register"
+                element={!(user != null && user.id != null) ? <Register /> : <Navigate to="/" />}
+              />
+          </Routes>
+        </div>
+      </HashRouter>
+      </div>
+  );
 }
 
 export default App;

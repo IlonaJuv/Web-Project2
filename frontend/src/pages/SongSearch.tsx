@@ -70,7 +70,7 @@ const SongSearch = () => {
 
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    fetch(`${process.env.REACT_APP_API_URL}/deezer/${searchQuery}`)
+    fetch(`${process.env.REACT_APP_DEEZER_API_URL}/deezer/${searchQuery}`)
       .then((res) => res.json())
       .then((response) => {
         const result = response.data.map((song: any) => ({
