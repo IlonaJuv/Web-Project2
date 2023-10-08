@@ -14,12 +14,12 @@ export default {
             const review = await ReviewModel.findById(args.id);
             return review;
         },
-        reviewsBySong: async (_parent: undefined, args: Review) => {
-            const reviews = await ReviewModel.find({song: args.song});
+        reviewsBySong: async (_parent: undefined, args: {songId: string}) => {
+            const reviews = await ReviewModel.find({song: args.songId});
             return reviews;
         },
-        reviewsByUser: async (_parent: undefined, args: Review) => {
-            const reviews = await ReviewModel.find({user: args.user});
+        reviewsByUser: async (_parent: undefined, args: {userId: string}) => {
+            const reviews = await ReviewModel.find({user: args.userId});
             return reviews;
         },
     },

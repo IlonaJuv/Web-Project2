@@ -5,20 +5,6 @@ import '../css/App.css'
 
 import { useLogout } from "../hooks/useLogout";
 
-/*
-function LogoutButton() {
-
-  return (
-    <div>
-      <button onClick={logout} disabled={isLoading}>
-        {isLoading ? "Logging out..." : "Logout"}
-      </button>
-      {error && <p>Error: {error.message}</p>}
-    </div>
-  );
-}
-
-export default LogoutButton;*/
 
 
 const SearchBar = (props: any ) => {
@@ -70,7 +56,7 @@ const SongSearch = () => {
 
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    fetch(`${process.env.REACT_APP_DEEZER_API_URL}/deezer/${searchQuery}`)
+    fetch(`${process.env.REACT_APP_DEEZER_DEEZER_URL}/deezer/${searchQuery}`)
       .then((res) => res.json())
       .then((response) => {
         const result = response.data.map((song: any) => ({

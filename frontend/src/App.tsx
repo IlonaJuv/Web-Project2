@@ -4,14 +4,14 @@ import Login from './pages/Login';
 import User from './interfaces/User';
 import Register from './pages/Register';
 import './css/App.css';
+import Profile from './pages/Profile';
 
 import SongSearch from './pages/SongSearch';
-import { useEffect } from 'react';
 
 function App() {
   const authContext = useAuthContext();
   const user: User = authContext.user;
-  
+
 
   return (
     <div className="app">
@@ -30,6 +30,7 @@ function App() {
                 path="/register"
                 element={!(user != null && user.id != null) ? <Register /> : <Navigate to="/" />}
               />
+            <Route path="/user/:userId" element={<Profile />} />
           </Routes>
         </div>
       </HashRouter>
