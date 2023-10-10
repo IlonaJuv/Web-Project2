@@ -17,6 +17,14 @@ export async function getReviews(userId: string): Promise<Review[]> {
                         album
                         artist
                     }
+                    likes
+                    user {
+                        id
+                        username
+                        email
+                    }
+                    createdAt
+                    updatedAt
                 }
             }
         `;

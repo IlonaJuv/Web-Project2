@@ -4,12 +4,19 @@ import User from '../interfaces/User';
 import { getUser } from '../hooks/getUser';
 import Review from '../interfaces/Review';
 import { getReviews } from '../hooks/getReviews';
+import ProfilePageReview from '../components/ReviewCard/ProfilePageReview';
+import { deleteReview } from '../hooks/deleteReview';
 
 const ProfilePage: React.FC = () => {
   const userId = useParams().userId;
   const [user, setUser] = useState<User | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
-
+  const userString = localStorage.getItem('user');
+  const loggedUser: User = userString ? JSON.parse(userString) : null;
+  let userIdString = "none";
+  if (loggedUser.id != null) {
+    userIdString = loggedUser.id;
+  }
   useEffect(() => {
     async function fetchUserData() {
       try {
@@ -35,7 +42,13 @@ const ProfilePage: React.FC = () => {
 
     fetchReviews();
   }, [userId]);
-
+  
+  const handleReviewDeletion = async (deletedReviewId: string) => {
+    const token = localStorage.getItem("token") || "";
+    await deleteReview(token,deletedReviewId);
+    const reviewsData = await getReviews(userId || '');
+    setReviews(reviewsData);
+  };
   return (
     <div>
       {user ? (
@@ -46,32 +59,25 @@ const ProfilePage: React.FC = () => {
             <div className="container">
               <div className="row justify-content-center">
                 {reviews.map((review, index) => (
-                  <div key={index} className="col-md-3 mb-3">
-                    <div className="card">
-                      <div className="card-body card-fixed-height">
-                          <img
-                            src={review.song.thumbnail}
-                            className="card-img-top mb-3"
-                            alt={review.song.song_name}
-                            style={{ width: '100%', height: '250px', objectFit: 'cover' }}
-                            onError={({currentTarget}) => {
-                              currentTarget.onerror = null;
-                              currentTarget.src = "not_found.png"
-                            }}
-                          />
-                        <h4 className="card-title">{review.song.song_name}</h4>
-                        <p className="card-text mb-1">{review.song.artist}</p>
-                        <div className="d-flex gap-2">
-                          {review.song.genres.map((genre, genreIndex) => (
-                            <p key={genreIndex} className="card-text mr-3">{genre}</p>
-                          ))}
-                        </div>
-                        <h4 className="card-text mt-4">{review.title}</h4>
-                        <p className="card-text">{review.comment}</p>
-                        <h4 className="card-text">{review.rating}/5</h4>
-                      </div>
-                    </div>
-                  </div>
+                  <ProfilePageReview
+                    key={index}
+                    id={review.id}
+                    song_name={review.song.song_name}
+                    song_artist={review.song.artist}
+                    song_genres={review.song.genres}
+                    song_thumbnail={review.song.thumbnail}
+                    rating={review.rating}
+                    title={review.title}
+                    comment={review.comment}
+                    username={review.user.username}
+                    userId={review.user.id}
+                    createdAt={review.createdAt}
+                    updatedAt={review.updatedAt}
+                    likes={review.likes}
+                    index={index}
+                    loggedUserId={userIdString}
+                    handleReviewDeletion={handleReviewDeletion}
+                  ></ProfilePageReview>
                 ))}
               </div>
             </div>

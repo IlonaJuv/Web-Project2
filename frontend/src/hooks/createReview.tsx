@@ -38,7 +38,7 @@ export async function createReview(rating: number, comment: string, title: strin
         }
       }
     `;
-
+    
     const graphQLClient = new GraphQLClient(API_URL || '', {
       headers: {
         Authorization: `Bearer ${token}`, 
