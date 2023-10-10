@@ -7,6 +7,7 @@ import './css/App.css';
 import Profile from './pages/Profile';
 
 import SongSearch from './pages/SongSearch';
+import SongPage from './pages/SongPage';
 
 function App() {
   const authContext = useAuthContext();
@@ -31,6 +32,7 @@ function App() {
                 element={!(user != null && user.id != null) ? <Register /> : <Navigate to="/" />}
               />
             <Route path="/user/:userId" element={<Profile />} />
+            <Route path="/song/:songId" element={<SongPage />} />
           </Routes>
         </div>
       </HashRouter>

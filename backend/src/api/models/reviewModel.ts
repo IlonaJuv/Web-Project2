@@ -2,7 +2,7 @@ import {Schema, model} from 'mongoose';
 import {Review} from '../../interfaces/review';
 
 const reviewSchema = new Schema<Review>({
-    likes: {type: Number, default: 0},
+    likes: {type: [String], default: []},
     song: {type: Schema.Types.ObjectId, ref: 'Song', required: true},
     user: {type: Schema.Types.ObjectId, ref: 'User', required: true},
     rating: {type: Number, required: true},
