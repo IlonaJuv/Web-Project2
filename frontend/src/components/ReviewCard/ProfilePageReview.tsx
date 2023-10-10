@@ -123,13 +123,27 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
     }
   };
 
+  const maxCharacters = 100; 
+  const [showFullText, setShowFullText] = useState(false);
+
   return (
-    <div key={index} className="col-md-3 mb-3">
+    <div key={index} className="col-md-5 mb-3">
       <div className="card">
-        <div className="card-body card-fixed-height">
-          <Link key={index} to={'/user/' + userId}>
-            <h4 className="card-text mt-4">By: {username}</h4>
-          </Link>
+        <div className="card-body card-min-height">
+          <div className="d-flex justify-content-end">
+          {userId === loggedUserId && !isEditing && (
+                <span role="button" className="material-symbols-outlined" onClick={handleEdit}>edit</span>
+              )}
+              {userId === loggedUserId && !isEditing && (
+                <span role="button" className="material-symbols-outlined ms-3" onClick={handleDelete}>delete</span>
+              )}
+              {isEditing ? (
+                <div>
+                  <span role="button" className="material-symbols-outlined" onClick={handleCancelEdit}>close</span>
+                </div>
+              ): null}
+          </div>
+          <h4 className="card-text">By: <Link key={index} to={'/user/' + userId} style={{ textDecoration: 'none' }}>{username}</Link></h4>
           {isEditing ? (
             <div>
               <h4 className="card-text mt-4">Edit Title</h4>
@@ -150,8 +164,9 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
                 value={editedRating}
                 onChange={handleRatingChange} 
               />
-              <button onClick={handleSaveEdit}>Save</button>
-              <button onClick={handleCancelEdit}>Cancel</button>
+              <div className="mt-1">
+                <span role="button" className="material-symbols-outlined" onClick={handleSaveEdit}>check</span>
+              </div>
               {userId === loggedUserId && !isEditing && (
                 <button onClick={handleDelete}>Delete</button>
               )}
@@ -177,11 +192,23 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
                     ))}
                 </div>
               <h4 className="card-text mt-4">
-                {title} {editedText}
+                {title}
               </h4>
-              <p className="card-text">{editedComment}</p>
+              <p className="card-text">
+            {showFullText ? editedComment : editedComment.slice(0, maxCharacters)}
+            {editedComment.length > maxCharacters && (
+            <button
+              onClick={() => setShowFullText(!showFullText)}
+              className="btn btn-link"
+            >
+              {showFullText ? 'Read less' : 'Read more'}
+            </button>
+          )}
+            </p>
+
+              <div className="d-flex">
               <h4 className="card-text">{editedRating}/5</h4>
-              <button
+              <button className="ms-2"
                 onClick={() => handleToggleLikeReview(id)}
                 disabled={isLoading}
                 style={{
@@ -195,21 +222,20 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
                 }}
               >
                 💖
-                <span style={{ marginLeft: "5px", textShadow: "none" }}>
+                <span className="ms-1 shadow-none">
                   {likesOfReview.length}
                 </span>
               </button>
-              {userId === loggedUserId && !isEditing && (
-                <button onClick={handleEdit}>Edit</button>
-              )}
-              {userId === loggedUserId && !isEditing && (
-                <button onClick={handleDelete}>Delete</button>
-              )}
+              
+              </div>
             </div>
           )}
-          <h4 className="card-text">
-            {moment(createdAtDate).fromNow()}
-          </h4>
+          <div className="d-flex">
+            <h4 className="card-text">
+              {moment(createdAtDate).fromNow()}
+            </h4>
+            <p className="text-muted ms-1 mt-1"><small>{editedText}</small></p>
+          </div>
         </div>
       </div>
     </div>
