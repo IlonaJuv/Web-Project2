@@ -1,17 +1,18 @@
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useAuthContext } from './hooks/useAuthContext';
 import Login from './pages/Login';
-import User from './interfaces/User';
 import Register from './pages/Register';
 import './css/App.css';
 import Profile from './pages/Profile';
 
 import SongSearch from './pages/SongSearch';
+import Header from './components/Header/Header';
 import SongPage from './pages/SongPage';
+import { useSelector } from 'react-redux';
+
 
 function App() {
-  const authContext = useAuthContext();
-  const user: User = authContext.user;
+  const token = useSelector((state: any) => state.user.token);
+  console.log(token);
 
 
   return (
@@ -21,15 +22,15 @@ function App() {
           <Routes>
             <Route 
               path="/" 
-              element={user != null && user.id != null? <SongSearch /> : <Navigate to="/login" />} 
+              element={token? <SongSearch /> : <Navigate to="/login" />} 
             />
             <Route 
               path="/login" 
-              element={!(user != null && user.id != null) ? <Login /> : <Navigate to="/" />} 
+              element={!token ? <Login /> : <Navigate to="/" />} 
             />
              <Route
                 path="/register"
-                element={!(user != null && user.id != null) ? <Register /> : <Navigate to="/" />}
+                element={!token ? <Register /> : <Navigate to="/" />}
               />
             <Route path="/user/:userId" element={<Profile />} />
             <Route path="/song/:songId" element={<SongPage />} />

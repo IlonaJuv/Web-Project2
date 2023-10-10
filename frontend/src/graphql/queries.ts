@@ -13,15 +13,16 @@ mutation Login($email: String!, $password: String!) {
   }
   `;
 const register = `
-  mutation Register($user: UserInput!) {
-    register(user: $user) {
-      message
-      data {
-        id
-        username
-        email
-      }
+mutation Register($user: UserInput!) {
+  register(user: $user) {
+    message
+    data {
+      id
+      username
+      email
     }
-  }  `;
+    token
+  }
+} `;
 
 export {login, register};

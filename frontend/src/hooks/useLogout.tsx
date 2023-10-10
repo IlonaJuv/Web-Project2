@@ -4,6 +4,7 @@ export const useLogout = () => {
 
 }
 */
+/*
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 
@@ -35,3 +36,4 @@ export const useLogout = () => {
 
     return { logout, error, isLoading };
 }
+*/export {}

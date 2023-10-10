@@ -1,4 +1,4 @@
-import { useState } from "react";
+/*import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 import { GraphQLClient, gql } from "graphql-request";
 import User from "../interfaces/User";
@@ -8,8 +8,6 @@ export interface LoginResponse {
         token: string
         user: User
     }
-    
-
 }
 
 export const useLogin = () => {
@@ -63,3 +61,4 @@ export const useLogin = () => {
 
     return {login, error, isLoading};
 }
+*/export {}

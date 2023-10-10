@@ -1,4 +1,4 @@
-import { useState } from "react";
+/*import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 import { GraphQLClient, gql } from "graphql-request";
 import User from "../interfaces/User";
@@ -45,4 +45,5 @@ export const useRegister = () => {
     }
 
     return { register, error, isLoading };
-}
+}*/
+export {}

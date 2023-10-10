@@ -1,21 +1,30 @@
-import Login from "../../pages/Login";
 import style from "./style.module.css";
 import { useState } from "react";
-import { useLogin } from "../../hooks/useLogin";
-import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../hooks/appHooks";
+import { signin } from "../../services/userService";
 import { Link } from "react-router-dom";
 
 
 const LoginForm = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const { login, error, isLoading } = useLogin();
-    const navigate = useNavigate();
+    //const { login, error, isLoading } = useLogin();
+    const [isLoading, setIsLoading] = useState(false)
+
+    const dispatch = useAppDispatch();
+
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
-        await login(email, password);
-        navigate('/');
+        const loginUser = {
+            email: email,
+            password: password,
+        }
+      dispatch(signin(loginUser));
+        
+
+      setEmail("");
+      setPassword("");
     }
     return (
         <div className={style.formContainer} onSubmit={handleSubmit}>
