@@ -5,9 +5,10 @@ import './css/App.css';
 import Profile from './pages/Profile';
 
 import SongSearch from './pages/SongSearch';
-import { useSelector } from 'react-redux';
 import Header from './components/Header/Header';
 import SongPage from './pages/SongPage';
+import { useSelector } from 'react-redux';
+
 
 function App() {
   const token = useSelector((state: any) => state.user.token);
