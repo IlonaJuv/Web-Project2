@@ -1,7 +1,7 @@
 import { GraphQLError } from 'graphql';
 import { Review } from '../../interfaces/review';
 import ReviewModel from '../models/reviewModel';
-import { UserIdWithToken } from '../../interfaces/user';
+import { User, UserIdWithToken } from '../../interfaces/user';
 import { Types } from 'mongoose';
 
 export default {
@@ -61,6 +61,24 @@ export default {
             if (!review) {
                 throw new GraphQLError('Not your review or review not found');
             }
+            return review;
+        },
+        likeReview: async (_parent: undefined, args: {id: string}, user: UserIdWithToken) => {
+            if (!user.token) {
+                throw new GraphQLError('You are not authorized to perform this action');
+            }
+            const review: Review = await ReviewModel.findById(args.id);
+            if (!review) {
+                throw new GraphQLError('Review not found');
+            }
+            if (review.likes.includes(user.id)) {
+                review.likes = review.likes.filter((like) => like !== user.id);
+            }
+            else {
+                review.likes.push(user.id);
+            }
+            
+            await review.save();
             return review;
         },
     },

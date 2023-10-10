@@ -2,7 +2,7 @@ scalar DateTime
 
 type Review {
   id: ID!
-  likes: Int!
+  likes: [String]!
   rating: Float!
   title: String!
   comment: String!
@@ -26,12 +26,7 @@ type Mutation {
     title: String!
     song: ID!
   ): Review
-  updateReview(
-    id: ID!
-    rating: Float
-    comment: String
-    title: String
-    likes: Int
-  ): Review
+  updateReview(id: ID!, rating: Float, comment: String, title: String): Review
+  likeReview(id: ID!): Review
   deleteReview(id: ID!): Review
 }
