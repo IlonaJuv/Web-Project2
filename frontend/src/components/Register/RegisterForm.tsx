@@ -1,8 +1,9 @@
 import style from "./style.module.css";
 import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../hooks/appHooks";
+import { signup } from "../../services/userService";
 
-import { Link, useNavigate } from "react-router-dom";
-import { useRegister } from "../../hooks/useRegister";
+import { Link } from "react-router-dom";
 
 const RegisterForm = () => {
     const [email, setEmail] = useState("");
@@ -10,15 +11,16 @@ const RegisterForm = () => {
     const [password, setPassword] = useState("");
     const [confirmpassword, setConfirmpassword] = useState("");
 
-    //const { login, error, isLoading } = useLogin();
-   // const [error, setError] = useState(null)
-    //const [isLoading, setIsLoading] = useState(false)
-    const navigate = useNavigate();
-    const { register, error, isLoading } = useRegister();
+    const [error, setError] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
+    const dispatch = useAppDispatch();
 
+
+  
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
+        try {
         if (password !== confirmpassword) {
           alert("Password mismatch");
           return;
@@ -28,15 +30,15 @@ const RegisterForm = () => {
           email: email,
           password: password,
         };
-        await register(newUser);
-       // const userResponse = await signup(newUser);
-        //console.log("userResponse refister: ", userResponse);
-        //dispatch(setUser(userResponse));
-        navigate('/');
-      
-    
-      //userDispatch(registerUSer(newUser));
-    }
+        dispatch(signup(newUser));
+      } catch (error: any) {
+        setError(error);
+        setUsername("");
+        setEmail("");
+        setPassword("");
+        setConfirmpassword("");
+      }
+        }
 
     return (
         <div className={style.formContainer} onSubmit={handleSubmit}>

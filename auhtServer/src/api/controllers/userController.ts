@@ -6,6 +6,8 @@ import userModel from '../models/userModel';
 import bcrypt from 'bcrypt';
 import DBMessageResponse from '../../interfaces/DBMessageResponse';
 import LoginMessageResponse from '../../interfaces/LoginMessageResponse';
+import jwt from 'jsonwebtoken';
+
 const salt = bcrypt.genSaltSync(12);
 
 const userPost = async (
@@ -28,6 +30,7 @@ const userPost = async (
 
     const user = req.body;
     user.password = await bcrypt.hash(user.password, salt);
+    const token = jwt.sign({id: user._id}, process.env.JWT_SECRET as string);
 
     const newUser = await userModel.create(user);
     const response: DBMessageResponse = {
@@ -37,6 +40,7 @@ const userPost = async (
         email: newUser.email,
         id: newUser._id,
       },
+      token: token,
     };
 
     res.json(response);

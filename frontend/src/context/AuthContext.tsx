@@ -1,4 +1,4 @@
-import { createContext, useReducer, useEffect } from "react";
+/*import { createContext, useReducer, useEffect } from "react";
 import User from "../interfaces/User";
 
 export const AuthContext = createContext<any>(null)
@@ -33,4 +33,4 @@ export const AuthContextProvider = ({ children } : {children:any}) => {
             {children}
         </AuthContext.Provider>
     )
-}
+}*/export {}

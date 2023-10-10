@@ -3,12 +3,17 @@ import { useEffect, useState } from 'react'
 import logo from './logo.svg';
 import '../css/App.css'
 
-import { useLogout } from "../hooks/useLogout";
+import { useAppDispatch } from '../hooks/appHooks';
+import { logout } from '../redux/userReducer';
 
 
 
 const SearchBar = (props: any ) => {
-  const { logout, error, isLoading } = useLogout();
+  const dispatch = useAppDispatch();
+
+  const handleLogOut = () => {
+    dispatch(logout());
+  };
 
   return (
     <div>
@@ -16,8 +21,7 @@ const SearchBar = (props: any ) => {
         <input type="search" value={props.searchQuery} className="form-control form-control-dark text-bg-dark" placeholder="Search..."
          aria-label="Search" id="search-input" onChange={props.handleSearchChange}/> 
       </form>
-      <button onClick={logout} disabled={isLoading}>
-          {isLoading ? "Logging out..." : "Logout"}
+      <button onClick={handleLogOut}> Log Out
         </button>
     </div>
   );
