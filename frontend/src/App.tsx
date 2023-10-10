@@ -7,6 +7,7 @@ import Profile from './pages/Profile';
 import SongSearch from './pages/SongSearch';
 import { useSelector } from 'react-redux';
 import Header from './components/Header/Header';
+import SongPage from './pages/SongPage';
 
 function App() {
   const token = useSelector((state: any) => state.user.token);
@@ -31,6 +32,7 @@ function App() {
                 element={!token ? <Register /> : <Navigate to="/" />}
               />
             <Route path="/user/:userId" element={<Profile />} />
+            <Route path="/song/:songId" element={<SongPage />} />
           </Routes>
         </div>
       </HashRouter>
