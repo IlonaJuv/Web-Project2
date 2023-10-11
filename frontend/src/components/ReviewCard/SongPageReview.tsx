@@ -105,32 +105,56 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
             <h4 className="card-text mt-4">By: {username}</h4>
           </Link>
           {isEditing ? (
-            <div>
-              <h4 className="card-text mt-4">Edit Title</h4>
-              <input
-                type="text"
-                value={editedTitle}
-                onChange={(e) => setEditedTitle(e.target.value)}
-              />
-              <h4 className="card-text mt-4">Edit Comment</h4>
-              <input
-                type="text"
-                value={editedComment}
-                onChange={(e) => setEditedComment(e.target.value)}
-              />
-              <h4 className="card-text mt-4">Edit Rating</h4>
-              <input
-                type="number"
-                value={editedRating}
-                onChange={handleRatingChange} 
-              />
-              <button onClick={handleSaveEdit}>Save</button>
-              <button onClick={handleCancelEdit}>Cancel</button>
-              {userId === loggedUserId && !isEditing && (
-                <button onClick={handleDelete}>Delete</button>
-              )}
-            </div>
-          ) : (
+  <div>
+    <h4 className="card-text mt-4">Edit Title</h4>
+    <input
+      type="text"
+      value={editedTitle}
+      onChange={(e) => setEditedTitle(e.target.value)}
+      minLength={1}
+      maxLength={50}
+      required
+      style={{
+        border: (editedTitle.length < 1 || editedTitle.length > 50) ? '1px solid red' : '1px solid green',
+      }}
+    />
+    <h4 className="card-text mt-4">Edit Comment</h4>
+    <input
+      type="text"
+      value={editedComment}
+      onChange={(e) => setEditedComment(e.target.value)}
+      minLength={1}
+      maxLength={250}
+      required
+      style={{
+        border: (editedComment.length < 1 || editedComment.length > 250) ? '1px solid red' : '1px solid green',
+      }}
+    />
+    <h4 className="card-text mt-4">Edit Rating</h4>
+    <input
+      type="number"
+      value={editedRating}
+      onChange={handleRatingChange}
+      min="1"
+      max="5"
+      required
+      style={{
+        border: (editedRating < 1 || editedRating > 5) ? '1px solid red' : '1px solid green',
+      }}
+    />
+    <button onClick={handleSaveEdit} disabled={
+      editedTitle.length < 1 || editedTitle.length > 50 ||
+      editedComment.length < 1 || editedComment.length > 250 ||
+      editedRating < 1 || editedRating > 5
+    }>
+      Save
+    </button>
+    <button onClick={handleCancelEdit}>Cancel</button>
+    {userId === loggedUserId && !isEditing && (
+      <button onClick={handleDelete}>Delete</button>
+    )}
+  </div>
+) : (
             
             <div>
               <h4 className="card-text mt-4">
