@@ -17,6 +17,7 @@ type Query {
   reviewById(id: ID!): Review
   reviewsBySong(songId: ID!): [Review]
   reviewsByUser(userId: ID!): [Review]
+  reviewsByUsername(username: String!): [Review]
 }
 
 type Mutation {

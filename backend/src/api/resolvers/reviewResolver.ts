@@ -3,6 +3,8 @@ import { Review } from '../../interfaces/review';
 import ReviewModel from '../models/reviewModel';
 import { User, UserIdWithToken } from '../../interfaces/user';
 import { Types } from 'mongoose';
+import fetchData from '../../utils/fetchData';
+import AuthMessageResponse from '../../interfaces/AuthMessageResponse';
 
 export default {
     Query: {
@@ -22,6 +24,25 @@ export default {
             const reviews = await ReviewModel.find({user: args.userId});
             return reviews;
         },
+        reviewsByUsername: async (_parent: undefined, args: { username: string }) => {
+            console.log("Useri: ", args.username)
+            const users = await fetchData<AuthMessageResponse>(
+                `${process.env.AUTH_URL}/users/username/${args.username}`
+              );
+            //console.log(users.data)
+            if (Array.isArray(users.data)) {
+              // Extract user IDs
+              const userIds = users.data.map((user) => user.id);
+      
+              // Find reviews by user IDs
+              const reviews = await ReviewModel.find({ user: { $in: userIds } });
+              return reviews;
+            } else {
+              // Handle the case when there's only one user with the given username
+              const reviews = await ReviewModel.find({ user: users.data.id });
+              return reviews;
+            }
+          },
     },
     Mutation: {
         createReview: async (_parent: undefined, args: Review, user: UserIdWithToken) => {
