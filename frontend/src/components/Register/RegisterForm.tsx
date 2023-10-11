@@ -1,9 +1,10 @@
 import style from "./style.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/appHooks";
 import { signup } from "../../services/userService";
 
 import { Link } from "react-router-dom";
+import { Alert } from "react-bootstrap";
 
 const RegisterForm = () => {
     const [email, setEmail] = useState("");
@@ -11,18 +12,22 @@ const RegisterForm = () => {
     const [password, setPassword] = useState("");
     const [confirmpassword, setConfirmpassword] = useState("");
 
-    const [error, setError] = useState(null)
+   // const [error, setError] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
+    const [showAlert, setShowAlert] = useState(false);
+
+    const { error } = useAppSelector((state: any) => state.user);
     const dispatch = useAppDispatch();
-
-
   
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
-        try {
         if (password !== confirmpassword) {
           alert("Password mismatch");
+          return;
+        }
+        if (!email || !password || !username) {
+          alert("Please fill all the fields");
           return;
         }
         const newUser = {
@@ -31,20 +36,28 @@ const RegisterForm = () => {
           password: password,
         };
         dispatch(signup(newUser));
-      } catch (error: any) {
-        setError(error);
         setUsername("");
         setEmail("");
         setPassword("");
         setConfirmpassword("");
       }
-        }
 
-    return (
-        <div className={style.formContainer} onSubmit={handleSubmit}>
-        <p className={style.title}>Register </p>
-        <form className={style.form}>
-        <input type="text"  placeholder="Username"
+      useEffect(() => {
+        if (error) {
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 3000); // 3000 milliseconds (5 seconds)
+        }
+      }, [error]); 
+
+        const formContainerClass = error ? `${style.formContainer} ${style.errorContainer}` : style.formContainer;
+
+        return (
+        <div className={formContainerClass} onSubmit={handleSubmit}>
+          <p className={style.title}>Register </p>
+          <form className={style.form}>
+          <input type="text"  placeholder="Username"
             className={style.input}
             onChange={(e) => setUsername(e.target.value)} 
             value={username}
@@ -62,11 +75,13 @@ const RegisterForm = () => {
            onChange={(e) => setConfirmpassword(e.target.value)} 
            value={confirmpassword} 
            />
-          <p className={style.pageLink}>
-            <span className={style.pageLinkLabel}>Forgot Password?</span>
-          </p>
           <button className={style.formBtn} disabled={isLoading}>Register</button>
         </form>
+        {showAlert && (
+          <Alert variant="danger" className="mt-1">
+            {error}
+          </Alert>
+        )}
         <p className={style.signUpLabel}>
           Already have an account?
           <Link to='/login' className={style.signUpLink}>Log in

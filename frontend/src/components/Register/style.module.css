@@ -7,6 +7,9 @@
     box-sizing: border-box;
     padding: 20px 30px;
   }
+  .errorContainer {
+    height: 550px; /* Set the desired height for the error state */
+  }
   
   .title {
     text-align: center;

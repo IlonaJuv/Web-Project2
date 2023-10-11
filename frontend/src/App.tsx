@@ -18,6 +18,7 @@ function App() {
   return (
     <div className="app">
     <HashRouter>
+      <Header />  
       <div className="main_container">
           <Routes>
             <Route 

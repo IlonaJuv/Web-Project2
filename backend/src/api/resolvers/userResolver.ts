@@ -34,6 +34,7 @@ export default {
             _parent: undefined,
             args: {email: string; password: string}
           ) => {
+            try {
             const options: RequestInit = {
               method: 'POST',
               headers: {'Content-Type': 'application/json'},
@@ -44,6 +45,9 @@ export default {
               options
             );
             return user;
+            } catch (error) {
+              return error;
+            }
           },
         register: async (_parent: undefined, args: {user: User}) => {
             const options: RequestInit = {
