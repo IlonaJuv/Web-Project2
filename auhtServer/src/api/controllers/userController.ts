@@ -16,7 +16,6 @@ const userPost = async (
   next: NextFunction
 ) => {
   try {
-    console.log('Userpost auth');
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -29,6 +28,14 @@ const userPost = async (
     }
 
     const user = req.body;
+    if (await userModel.findOne({username: user.username})) {
+      next(new CustomError('Username already exists', 400));
+      return;
+    }
+    if (await userModel.findOne({email: user.email})) {
+      next(new CustomError('Email already exists', 400));
+      return;
+    }
     user.password = await bcrypt.hash(user.password, salt);
     const token = jwt.sign({id: user._id}, process.env.JWT_SECRET as string);
 

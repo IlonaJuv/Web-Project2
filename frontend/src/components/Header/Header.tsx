@@ -7,16 +7,21 @@ import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
 import style from "./style.module.css";
 
+
 //redux
-import { useDispatch } from "react-redux";
 import { logout } from "../../redux/userReducer";
 import { useAppDispatch, useAppSelector } from "../../hooks/appHooks";
+import User from "../../interfaces/User";
+import { useNavigate } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 
 function Header() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [username, setUsername] = useState(null);
   const user = useAppSelector((state: any) => state.user);
+  const user2: User = localStorage.getItem('user') as User;
+  const navigate = useNavigate()
 
 
   useEffect(() => {
@@ -27,8 +32,16 @@ function Header() {
 
   const handleLogOut = () => {
     dispatch(logout());
+    navigate("/");
   };
+  const navigateProfile = () => {
+    navigate(`/user/${user.user.id}`)
+  }
+  const navigateHome = () => {
+    navigate("/")
+  }
 
+  
   return (
     <Navbar expand="lg" className={style.header}>
       <Container fluid>
@@ -41,25 +54,31 @@ function Header() {
             className="me-auto my-2 my-lg-0"
             style={{ maxHeight: "100px" }}
             navbarScroll
-          >
-            <Nav.Link className={style.link} href="#Home">
-              Home
-            </Nav.Link>
-            <Nav.Link className={style.link} href="#Restaurant">
-              Restaurant{" "}
-            </Nav.Link>
+          >{user2 ? (
+          <>
+          <Nav.Link className={style.link} onClick={navigateHome}>
+          Home
+        </Nav.Link>
+        </>
+        ) : (
+          <>
+          </>
+        )
+          }    
           </Nav>
-          {user && (
+          {user2 && (
             <>
               <Navbar.Text>Signed in as: </Navbar.Text>
-              <Nav.Link className={style.username} href="#user">
-                {username}
+              <Nav.Link className={style.link} onClick={navigateProfile}>
+                 {username}
               </Nav.Link>
+              <Button onClick={handleLogOut} className={style.btn}>
+                Logout
+            </Button>
+              
             </>
           )}
-          <Button onClick={handleLogOut} className={style.btn}>
-            Logout
-          </Button>
+        
         </Navbar.Collapse>
       </Container>
     </Navbar>
@@ -68,24 +87,3 @@ function Header() {
 
 export default Header;
 
-/*
- const Header = () => {
-//className="bg-body-tertiary"
-    return (
-        <Navbar className={style.header}>
-        <Container>
-          <Navbar.Brand className={style.title} href="#home">Tourist guide</Navbar.Brand>
-          <Navbar.Toggle />
-          <Navbar.Collapse className="justify-content-end">
-          <Navbar.Text>
-              Signed in as: Username
-            </Navbar.Text>
-          <Navbar.Text>
-              <a href="#login">Logout:</a>
-            </Navbar.Text>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-    )
-}
-*/

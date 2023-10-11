@@ -3,9 +3,7 @@
   flex-direction: column;
   place-items: center;
   gap: 8px;
-  display: flex;
-    justify-content: center;
-    align-items: center;
+  
 }
 .texts {
   text-align: center;

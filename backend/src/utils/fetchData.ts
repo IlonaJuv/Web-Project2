@@ -4,10 +4,11 @@ export default async <T>(
   ): Promise<T> => {
     const response = await fetch(url, options);
     if (!response.ok) {
-      throw new Error('Error while fetching');
+      const json = await response.json();
+      throw new Error(json.message );
     }
     const json = await response.json();
-    console.log("fetch json", json);
+    console.log("fetch backend json  ", json);
     return json;
   };
   

@@ -3,26 +3,13 @@ import { useEffect, useState } from 'react'
 import logo from './logo.svg';
 import '../css/App.css'
 
-import { useAppDispatch } from '../hooks/appHooks';
-import { logout } from '../redux/userReducer';
-
-
-
 const SearchBar = (props: any ) => {
-  const dispatch = useAppDispatch();
-
-  const handleLogOut = () => {
-    dispatch(logout());
-  };
-
   return (
     <div>
       <form className="col-20 col-lg-auto mb-3 mb-lg-0 me-lg-3 mt-3" role="search" id="search-form" onSubmit={props.handleSearchSubmit}>
         <input type="search" value={props.searchQuery} className="form-control form-control-dark text-bg-dark" placeholder="Search..."
          aria-label="Search" id="search-input" onChange={props.handleSearchChange}/> 
       </form>
-      <button onClick={handleLogOut}> Log Out
-        </button>
     </div>
   );
 }
