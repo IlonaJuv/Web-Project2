@@ -2,9 +2,6 @@ import React from 'react';
 import { useEffect, useState } from 'react'
 import logo from './logo.svg';
 import '../css/App.css'
-
-import { useAppDispatch } from '../hooks/appHooks';
-import { logout } from '../redux/userReducer';
 import { getSongs } from '../hooks/getSongs';
 import Song from '../interfaces/Song';
 import User from '../interfaces/User';
@@ -14,11 +11,6 @@ import { useNavigate } from 'react-router-dom';
 
 
 const SearchBar = (props: any ) => {
-  const dispatch = useAppDispatch();
-
-  const handleLogOut = () => {
-    dispatch(logout());
-  };
 
   return (
     <div>
@@ -26,8 +18,6 @@ const SearchBar = (props: any ) => {
         <input type="search" value={props.searchQuery} className="form-control form-control-dark text-bg-dark" placeholder="Search..."
          aria-label="Search" id="search-input" onChange={props.handleSearchChange}/> 
       </form>
-      <button onClick={handleLogOut}> Log Out
-        </button>
     </div>
   );
 }
