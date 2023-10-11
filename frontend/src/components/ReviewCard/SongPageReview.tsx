@@ -115,7 +115,7 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
       maxLength={50}
       required
       style={{
-        border: (editedTitle.length < 1 || editedTitle.length > 50) ? '1px solid red' : '1px solid green',
+        border: (editedTitle.length < 1 || editedTitle.length > 50) ? '3px solid red' : '3px solid green',
       }}
     />
     <h4 className="card-text mt-4">Edit Comment</h4>
@@ -127,7 +127,7 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
       maxLength={250}
       required
       style={{
-        border: (editedComment.length < 1 || editedComment.length > 250) ? '1px solid red' : '1px solid green',
+        border: (editedComment.length < 1 || editedComment.length > 250) ? '3px solid red' : '3px solid green',
       }}
     />
     <h4 className="card-text mt-4">Edit Rating</h4>
@@ -139,7 +139,7 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
       max="5"
       required
       style={{
-        border: (editedRating < 1 || editedRating > 5) ? '1px solid red' : '1px solid green',
+        border: (editedRating < 1 || editedRating > 5) ? '3px solid red' : '3px solid green',
       }}
     />
     <button onClick={handleSaveEdit} disabled={

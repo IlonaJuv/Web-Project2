@@ -184,7 +184,7 @@ const SongPage: React.FC = () => {
                       onChange={handleNewReviewChange}
                       required
                       style={{
-                        border: (newReview.rating >= 1 && newReview.rating <= 5) ? '1px solid green' : '1px solid red',
+                        border: (newReview.rating >= 1 && newReview.rating <= 5) ? '3px solid green' : '3px solid red',
                       }}
                     />
                   </div>
@@ -200,7 +200,7 @@ const SongPage: React.FC = () => {
                       onChange={handleNewReviewChange}
                       required
                       style={{
-                        border: isTitleValid ? '1px solid green' : '1px solid red',
+                        border: isTitleValid ? '3px solid green' : '3px solid red',
                       }}
                     />
                   </div>
@@ -216,7 +216,7 @@ const SongPage: React.FC = () => {
                       onChange={handleNewReviewChange}
                       required
                       style={{
-                        border: isTextValid ? '1px solid green' : '1px solid red',
+                        border: isTextValid ? '3px solid green' : '3px solid red',
                       }}
                     />
                   </div>
