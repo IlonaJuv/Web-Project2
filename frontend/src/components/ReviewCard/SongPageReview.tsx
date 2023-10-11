@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import { likeReview } from '../../hooks/likeReview';
-import { editReview } from '../../hooks/editReview';
 
 interface SongPageReviewProps {
   id: string;
@@ -19,6 +17,8 @@ interface SongPageReviewProps {
   index: number;
   loggedUserId: string;
   handleReviewDeletion: (reviewId: string) => void; 
+  handleReviewEdit: (reviewId: string, editedRating?: number, editedComment?: string, editedTitle?: string) => void;
+  handleReviewLike: (reviewId: string) => void;
 }
 
 const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
@@ -37,28 +37,21 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
     index,
     loggedUserId,
     handleReviewDeletion,
+    handleReviewEdit,
+    handleReviewLike
   } = props;
   const createdAtDate = new Date(createdAt);
-  const updatedAtDate = new Date(updatedAt);
-  const editedString = (updatedAtDate > createdAtDate ? '(edited)' : '');
-  const [likesOfReview, setLikesOfReview] = useState(likes);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasLiked, setHasLiked] = useState(likes.includes(loggedUserId));
   const [isEditing, setIsEditing] = useState(false);
   const [editedRating, setEditedRating] = useState(rating);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedComment, setEditedComment] = useState(comment);
   const [originalRating] = useState(rating); 
-  const [editedText, setEditedText] = useState(editedString);
 
   const handleToggleLikeReview = async (reviewId: string) => {
     setIsLoading(true);
-    const token = localStorage.getItem("token") || "";
-    const newLikes = await likeReview(reviewId, token);
-
-    setLikesOfReview(newLikes);
+    handleReviewLike(reviewId);
     setIsLoading(false);
-    setHasLiked(newLikes.includes(loggedUserId));
   };
 
   const handleEdit = () => {
@@ -76,22 +69,7 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
       return;
     }
 
-    const token = localStorage.getItem("token") || "";
-    await editReview(
-      token,
-      id,
-      isRatingEdited ? editedRating : undefined,
-      isCommentEdited ? editedComment : undefined, 
-      isTitleEdited ? editedTitle : undefined 
-    );
-
-    setEditedRating(editedRating);
-    if(editedText !== '(edited)'){
-        setEditedText('(edited)');
-    }
-    
-    setEditedTitle(editedTitle + editedText);
-    setEditedComment(editedComment);
+    handleReviewEdit(id, editedRating, editedComment, editedTitle);
 
     setIsEditing(false);
   };
@@ -156,15 +134,15 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
             
             <div>
               <h4 className="card-text mt-4">
-                {title} {editedText}
+                {title} {createdAt !== updatedAt? "(edited)" : null}
               </h4>
-              <p className="card-text">{editedComment}</p>
-              <h4 className="card-text">{editedRating}/5</h4>
+              <p className="card-text">{comment}</p>
+              <h4 className="card-text">{rating}/5</h4>
               <button
                 onClick={() => handleToggleLikeReview(id)}
                 disabled={isLoading}
                 style={{
-                  textShadow: hasLiked ? "0px 0px 15px #FF0000" : "none",
+                  textShadow: likes.includes(loggedUserId) ? "0px 0px 15px #FF0000" : "none",
                   fontSize: "20px",
                   background: "none",
                   border: "none",
@@ -175,7 +153,7 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
               >
                 💖
                 <span style={{ marginLeft: "5px", textShadow: "none" }}>
-                  {likesOfReview.length}
+                  {likes.length}
                 </span>
               </button>
               {userId === loggedUserId && !isEditing && (

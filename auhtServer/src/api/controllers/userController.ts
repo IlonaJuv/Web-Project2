@@ -151,4 +151,35 @@ const userDelete = async (
   }
 };
 
-export {userPost, userListGet, userGet, userPut, userDelete};
+const userGetByUsername = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    console.log('userGetByUsername');
+    const {username} = req.params;
+
+    const regex = new RegExp(username, 'i'); // 'i' flag makes it case-insensitive
+
+    const users = await userModel
+      .find({username: {$regex: regex}})
+      .select('-password -__v');
+
+    if (users.length === 0) {
+      next(new CustomError('No users found with that username', 404));
+      return;
+    }
+
+    const response: DBMessageResponse = {
+      message: 'Users found',
+      data: users,
+    };
+
+    res.json(response);
+  } catch (error) {
+    next(new CustomError('User retrieval by username failed', 500));
+  }
+};
+
+export {userPost, userListGet, userGet, userPut, userDelete, userGetByUsername};

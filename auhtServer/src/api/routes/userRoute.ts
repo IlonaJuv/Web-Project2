@@ -2,6 +2,7 @@ import express from 'express';
 import {
   //check,
   //checkToken,
+  userGetByUsername,
   userDelete,
   userGet,
   userListGet,
@@ -24,5 +25,7 @@ router
 //router.route('/check').get(check);
 
 router.route('/:id').get(userGet);
+
+router.route('/username/:username').get(userGetByUsername);
 
 export default router;
