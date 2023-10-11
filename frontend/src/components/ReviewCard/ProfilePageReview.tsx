@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { likeReview } from '../../hooks/likeReview';
 import { editReview } from '../../hooks/editReview';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
 interface ProfilePageReviewProps {
   id: string;
@@ -54,6 +56,7 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
   const [editedComment, setEditedComment] = useState(comment);
   const [originalRating] = useState(rating); 
   const [editedText, setEditedText] = useState(editedString);
+  const [validated, setValidated] = useState(false);
 
   const handleToggleLikeReview = async (reviewId: string) => {
     setIsLoading(true);
@@ -69,8 +72,13 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
     setIsEditing(true);
   };
 
-  const handleSaveEdit = async () => {
-
+  const handleSaveEdit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    if(form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+    }else {
     const isRatingEdited = editedRating !== originalRating;
     const isTitleEdited = editedTitle !== title;
     const isCommentEdited = editedComment !== comment;
@@ -94,10 +102,13 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
         setEditedText('(edited)');
     }
     
-    setEditedTitle(editedTitle + editedText);
+    setEditedTitle(editedTitle);
     setEditedComment(editedComment);
 
     setIsEditing(false);
+    }
+
+    setValidated(true);
   };
 
   const handleCancelEdit = () => {
@@ -146,30 +157,62 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
           <h4 className="card-text">By: <Link key={index} to={'/user/' + userId} style={{ textDecoration: 'none' }}>{username}</Link></h4>
           {isEditing ? (
             <div>
-              <h4 className="card-text mt-4">Edit Title</h4>
-              <input
-                type="text"
-                value={editedTitle}
-                onChange={(e) => setEditedTitle(e.target.value)}
-              />
-              <h4 className="card-text mt-4">Edit Comment</h4>
-              <input
-                type="text"
-                value={editedComment}
-                onChange={(e) => setEditedComment(e.target.value)}
-              />
-              <h4 className="card-text mt-4">Edit Rating</h4>
-              <input
-                type="number"
-                value={editedRating}
-                onChange={handleRatingChange} 
-              />
-              <div className="mt-1">
-                <span role="button" className="material-symbols-outlined" onClick={handleSaveEdit}>check</span>
-              </div>
-              {userId === loggedUserId && !isEditing && (
-                <button onClick={handleDelete}>Delete</button>
-              )}
+              <Form noValidate validated={validated} onSubmit={handleSaveEdit}>
+                <Form.Group className="card-text mt-2" controlId="review-title">
+                  <Form.Label><h5>Title</h5></Form.Label>
+                  <Form.Control
+                    required
+                    type="text"
+                    placeholder="Title"
+                    value={editedTitle}
+                    onChange={(e) => setEditedTitle(e.target.value)}
+                    minLength={5}
+                    maxLength={50}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Please provide a valid title.
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group className="card-text mt-2" controlId="review-rating">
+                  <Form.Label><h5>Rating</h5></Form.Label>
+                  <Form.Control
+                    required
+                    type="number"
+                    placeholder="Rating"
+                    value={editedRating}
+                    onChange={handleRatingChange}
+                    min={1}
+                    max={5}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Please provide a rating between 1 and 5.
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group className="card-text mt-2" controlId="review-comment">
+                  <Form.Label><h5>Comment</h5></Form.Label>
+                  <Form.Control as ="textarea" rows={5}
+                    required
+                    placeholder="Comment"
+                    value={editedComment}
+                    onChange={(e) => setEditedComment(e.target.value)}
+                    minLength={10}
+                    maxLength={500}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Please provide a valid comment.
+                  </Form.Control.Feedback>
+                  <Button variant="primary" type="submit" className="mt-2">
+                    Save
+                  </Button>
+                  <Button
+                    variant="danger"
+                    className="mt-2 ms-2"
+                    onClick={handleCancelEdit}
+                  >
+                    Cancel
+                  </Button>
+                </Form.Group>
+              </Form>
             </div>
           ) : (
             

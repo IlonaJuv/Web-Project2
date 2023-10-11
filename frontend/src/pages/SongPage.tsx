@@ -10,6 +10,9 @@ import User from '../interfaces/User';
 import SongPageReview from '../components/ReviewCard/SongPageReview';
 import { editReview } from '../hooks/editReview';
 import { likeReview } from '../hooks/likeReview';
+import Dropdown from 'react-bootstrap/Dropdown'
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
 
 const SongPage: React.FC = () => {
   const songId = useParams().songId;
@@ -23,6 +26,7 @@ const SongPage: React.FC = () => {
   const [orderByLikesLeast, setOrderByLikesLeast] = useState(false);
   const [orderByLikesMost, setOrderByLikesMost] = useState(false);
   const userString = localStorage.getItem('user');
+  const [validated, setValidated] = useState(false);
   const user: User = userString ? JSON.parse(userString) : null;
   let userId = 'none';
   let songIdString = 'none';
@@ -49,14 +53,22 @@ const SongPage: React.FC = () => {
 
   const handleSubmitNewReview = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (typeof newReview.rating !== 'number') {
-      newReview.rating = parseInt(newReview.rating);
+    const form = e.target as HTMLFormElement;
+    if(form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+    }else {
+      if (typeof newReview.rating !== 'number') {
+        newReview.rating = parseInt(newReview.rating);
+      }
+      const token = localStorage.getItem('token') || '';
+      await createReview(newReview.rating, newReview.text, newReview.title, songIdString, token);
+      const reviewsData = await getReviewsBySong(songIdString);
+      setReviews(reviewsData);
+      setIsAddingReview(false);
     }
-    const token = localStorage.getItem('token') || '';
-    await createReview(newReview.rating, newReview.text, newReview.title, songIdString, token);
-    const reviewsData = await getReviewsBySong(songIdString);
-    setReviews(reviewsData);
-    setIsAddingReview(false);
+
+    setValidated(true);
   };
 
   const handleReviewDeletion = async (deletedReviewId: string) => {
@@ -134,130 +146,123 @@ const SongPage: React.FC = () => {
     <div>
       {song ? (
         <div>
-          <h1 className="text-center">{song.song_name}</h1>
-          <img
-            src={song.thumbnail}
-            className="card-img-top mb-3"
-            alt={song.song_name}
-            style={{
-              width: '100%',
-              height: '250px',
-              objectFit: 'cover',
-            }}
-            onError={({ currentTarget }) => {
-              currentTarget.onerror = null;
-              currentTarget.src = 'not_found.png';
-            }}
-          />
-          <p className="card-text">By: {song.artist}</p>
-          <div className="d-flex gap-2">
-            {song.genres.map((genre, genreIndex) => (
-              <p key={genreIndex} className="card-text mr-3">
-                {genre}
-              </p>
-            ))}
-          </div>
+          <div className="d-flex justify-content-start">
+            <img
+              src={song.thumbnail}
+              className="card-img-top mb-3"
+              alt={song.song_name}
+              style={{
+                width: "50%",
+                height: "500px",
+                objectFit: "cover",
+              }}
+              onError={({ currentTarget }) => {
+                currentTarget.onerror = null;
+                currentTarget.src = "not_found.png";
+              }}
+            />
+            <div className="d-flex flex-column">
+              <h1 className="text-center ms-5">{song.song_name}</h1>
+              <p className="card-text ms-5">By: {song.artist}</p>
+              <div className="d-flex ms-5 gap-2">
+                {song.genres.map((genre, genreIndex) => (
+                  <p key={genreIndex} className="card-text mr-3">
+                    {genre}
+                  </p>
+                ))}
+              </div>
+              <input
+                  type="text"
+                  placeholder="Search by username"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="ms-5 mt-5"
+              />
+              <div className="d-flex ms-5 justify-content-between">
+                <div>
+                  <Dropdown>
+                    <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                      Sort reviews by
+                    </Dropdown.Toggle>
 
-          <input
-            type="text"
-            placeholder="Search by username"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-
-          <button onClick={toggleReviewForm}>Add a Review</button>
-
-          {isAddingReview && (
-            <div className="overlay">
-              <div className="review-form">
-                <h3>Add a Review</h3>
-                <form onSubmit={handleSubmitNewReview}>
-                  <div>
-                    <label htmlFor="rating">Rating:</label>
-                    <input
-                      type="number"
-                      id="rating"
-                      name="rating"
-                      min="1"
-                      max="5"
-                      value={newReview.rating}
-                      onChange={handleNewReviewChange}
-                      required
-                      style={{
-                        border: (newReview.rating >= 1 && newReview.rating <= 5) ? '3px solid green' : '3px solid red',
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="title">Title:</label>
-                    <input
-                      type="text"
-                      id="title"
-                      name="title"
-                      minLength={1}
-                      maxLength={50}
-                      value={newReview.title}
-                      onChange={handleNewReviewChange}
-                      required
-                      style={{
-                        border: isTitleValid ? '3px solid green' : '3px solid red',
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="text">Review:</label>
-                    <textarea
-                      id="text"
-                      name="text"
-                      rows={4}
-                      minLength={1}
-                      maxLength={250}
-                      value={newReview.text}
-                      onChange={handleNewReviewChange}
-                      required
-                      style={{
-                        border: isTextValid ? '3px solid green' : '3px solid red',
-                      }}
-                    />
-                  </div>
-                  <button type="submit" disabled={!isFormValid}>
+                    <Dropdown.Menu>
+                      <Dropdown.Item onClick={() => {
+                        setOrderByDateNewest(true);
+                        setOrderByDateOldest(false);
+                        setOrderByLikesLeast(false);
+                        setOrderByLikesMost(false);
+                        }}>
+                        Newest to oldest
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => {
+                        setOrderByDateNewest(false);
+                        setOrderByDateOldest(true);
+                        setOrderByLikesLeast(false);
+                        setOrderByLikesMost(false);
+                        }}>
+                        Odest to Newest
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => {
+                        setOrderByDateNewest(false);
+                        setOrderByDateOldest(false);
+                        setOrderByLikesLeast(false);
+                        setOrderByLikesMost(true);
+                        }}>
+                        Most likes
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => {
+                        setOrderByDateNewest(false);
+                        setOrderByDateOldest(false);
+                        setOrderByLikesLeast(true);
+                        setOrderByLikesMost(false);
+                        }}>
+                        Least likes
+                      </Dropdown.Item>
+                      </Dropdown.Menu>
+                  </Dropdown>
+                </div>
+                <Button variant="primary"  onClick={toggleReviewForm}>Add a Review</Button>
+              </div>
+              <div className="ms-5 mt-5">
+                {isAddingReview ? (
+                  <Form noValidate validated={validated} onSubmit={handleSubmitNewReview}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Rating</Form.Label>
+                    <Form.Control type="number" id="rating" name="rating" max={5} min={1} value={newReview.rating} onChange={handleNewReviewChange} required />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid rating.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Title</Form.Label>
+                    <Form.Control type="text" id="title" name="title" value={newReview.title} onChange={handleNewReviewChange} required placeholder="Review title"
+                     minLength={3} maxLength={50}/>
+                     <Form.Control.Feedback type="invalid">
+                      Please provide a valid title.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Review</Form.Label>
+                    <Form.Control as="textarea" rows={4} id="text" name="text" value={newReview.text} onChange={handleNewReviewChange} required placeholder="Review text"
+                     minLength={20} maxLength={250}/>
+                     <Form.Control.Feedback type="invalid">
+                      Please provide a valid review.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Button variant="primary" type="submit">
                     Submit Review
-                  </button>
-                </form>
-                <button onClick={toggleReviewForm}>Cancel</button>
+                  </Button>
+                  <Button className="ms-2" variant="danger" onClick={toggleReviewForm}>
+                    Cancel
+                  </Button>
+                </Form>
+                ) : null}
               </div>
             </div>
-          )}
-
-          <div>
-          <button onClick={() => {
-            setOrderByDateNewest(true);
-            setOrderByDateOldest(false);
-            setOrderByLikesLeast(false);
-            setOrderByLikesMost(false);
-          }}>Newest to Oldest</button>
-          <button onClick={() => {
-            setOrderByDateNewest(false);
-            setOrderByDateOldest(true);
-            setOrderByLikesLeast(false);
-            setOrderByLikesMost(false);
-          }}>Oldest to Newest</button>
-          <button onClick={() => {
-            setOrderByDateNewest(false);
-            setOrderByDateOldest(false);
-            setOrderByLikesLeast(true);
-            setOrderByLikesMost(false);
-          }}>Least Likes to Most</button>
-          <button onClick={() => {
-            setOrderByDateNewest(false);
-            setOrderByDateOldest(false);
-            setOrderByLikesLeast(false);
-            setOrderByLikesMost(true);
-          }}>Most Likes to Least</button>
           </div>
-
+  
           <h2 className="text-center">Reviews</h2>
-
+  
           {sortedReviews.length > 0 ? (
             <div className="container">
               <div className="row justify-content-center">
@@ -293,6 +298,7 @@ const SongPage: React.FC = () => {
       )}
     </div>
   );
+  
 };
 
 export default SongPage;

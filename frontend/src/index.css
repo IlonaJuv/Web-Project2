@@ -18,6 +18,12 @@ body {
   overflow: hidden;
 }
 
+.song-page-card-min-height {
+  min-height: 400px;
+  overflow: hidden;
+}
+
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
