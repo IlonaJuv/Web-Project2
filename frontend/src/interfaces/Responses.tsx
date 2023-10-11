@@ -1,13 +1,28 @@
 import User from "./User";
 export interface RegisterResponse {
-    register: {
-        data: User
-        token: string
+    data: {
+        register: {
+            data: User
+            token: string
+        }
     }
+    errors: [
+        {
+            message: string
+        }
+    ]
   }
   export interface LoginResponse {
-    login: {
-        token: string
-        user: User
+    data: {
+        login: {
+            token: string
+            user: User
+        }
     }
+    errors: [
+        {
+            message: string
+        }
+    ]
+    
   }

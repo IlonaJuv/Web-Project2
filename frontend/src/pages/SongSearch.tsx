@@ -9,9 +9,7 @@ import { createSong } from '../hooks/createSong';
 import { useNavigate } from 'react-router-dom';
 
 
-
 const SearchBar = (props: any ) => {
-
   return (
     <div>
       <form className="col-20 col-lg-auto mb-3 mb-lg-0 me-lg-3 mt-3" role="search" id="search-form" onSubmit={props.handleSearchSubmit}>
