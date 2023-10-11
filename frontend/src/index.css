@@ -13,10 +13,16 @@ body {
   background-color: #212529 !important;
 }
 
-.card-fixed-height {
-  height: 600px;
+.card-min-height {
+  min-height: 650px;
   overflow: hidden;
 }
+
+.song-page-card-min-height {
+  min-height: 400px;
+  overflow: hidden;
+}
+
 
 
 code {
