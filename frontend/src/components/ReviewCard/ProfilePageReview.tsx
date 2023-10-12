@@ -12,6 +12,7 @@ interface ProfilePageReviewProps {
   song_genres: string[];
   song_artist: string;
   song_thumbnail: string;
+  song_id: string;
   rating: number;
   title: string;
   comment: string;
@@ -32,6 +33,7 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
     song_genres,
     song_artist,
     song_thumbnail,
+    song_id,
     rating,
     title,
     comment,
@@ -227,7 +229,9 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
                         currentTarget.src = "not_found.png"
                     }}
                 />
+                <Link style={{ textDecoration: 'none' }} to={"/song/" + song_id}>
                 <h4 className="card-title">{song_name}</h4>
+                </Link>
                 <p className="card-text mb-1">{song_artist}</p>
                 <div className="d-flex gap-2">
                     {song_genres.map((genre, genreIndex) => (

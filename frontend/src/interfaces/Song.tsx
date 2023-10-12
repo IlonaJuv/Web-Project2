@@ -5,5 +5,5 @@ export default interface User {
     artist: string;
     album: string;
     genres: string[];
-    api_id: number;
+    api_id: string;
 }

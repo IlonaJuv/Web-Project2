@@ -10,7 +10,7 @@ export interface createSongResponse {
         artist: string;
         album: string;
         genres: string[];
-        api_id: number;
+        api_id: string;
       };
 }
 
@@ -18,17 +18,17 @@ export async function createSong(song_name: string, thumbnail: string, artist: s
   try {
     const API_URL = process.env.REACT_APP_API_URL;
     const likeReviewMutation = gql`
-    mutation Mutation($songName: String!, $thumbnail: String!, $artist: String!, $album: String!, $genres: [String]!, $apiId: Int!) {
-        addSong(song_name: $songName, thumbnail: $thumbnail, artist: $artist, album: $album, genres: $genres, api_id: $apiId) {
-          id
-          song_name
-          thumbnail
-          artist
-          album
-          genres
-          api_id
-        }
+    mutation Mutation($songName: String!, $thumbnail: String!, $artist: String!, $album: String!, $genres: [String]!, $apiId: String!) {
+      addSong(song_name: $songName, thumbnail: $thumbnail, artist: $artist, album: $album, genres: $genres, api_id: $apiId) {
+        id
+        song_name
+        thumbnail
+        artist
+        album
+        genres
+        api_id
       }
+    }
     `;
     const graphQLClient = new GraphQLClient(API_URL || "", {});
    const variables = {
@@ -37,7 +37,7 @@ export async function createSong(song_name: string, thumbnail: string, artist: s
         artist: artist,
         album: album,
         genres: genres,
-        apiId: parseInt(api_id)
+        apiId: api_id
     };
     const response: createSongResponse = await graphQLClient.request(likeReviewMutation, variables);
     console.log("luodaan ", response.addSong);

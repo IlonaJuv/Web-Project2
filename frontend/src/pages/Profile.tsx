@@ -35,6 +35,7 @@ const ProfilePage: React.FC = () => {
       try {
         const reviewsData = await getReviews(userId || '');
         setReviews(reviewsData);
+        console.log(reviewsData);
       } catch (error) {
         console.error('Error fetching reviews:', error);
       }
@@ -59,6 +60,7 @@ const ProfilePage: React.FC = () => {
             <div className="container">
               <div className="row justify-content-center">
                 {reviews.map((review, index) => (
+                  
                   <ProfilePageReview
                     key={index}
                     id={review.id}
@@ -66,6 +68,7 @@ const ProfilePage: React.FC = () => {
                     song_artist={review.song.artist}
                     song_genres={review.song.genres}
                     song_thumbnail={review.song.thumbnail}
+                    song_id={review.song.id}
                     rating={review.rating}
                     title={review.title}
                     comment={review.comment}

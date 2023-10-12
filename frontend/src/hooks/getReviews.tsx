@@ -11,6 +11,7 @@ export async function getReviews(userId: string): Promise<Review[]> {
                     comment
                     rating
                     song {
+                        id
                         song_name
                         thumbnail
                         genres
