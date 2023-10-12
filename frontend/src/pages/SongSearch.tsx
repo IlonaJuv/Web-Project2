@@ -6,7 +6,10 @@ import { getSongs } from '../hooks/getSongs';
 import Song from '../interfaces/Song';
 import User from '../interfaces/User';
 import { createSong } from '../hooks/createSong';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { getReviewsBySong } from '../hooks/getReviewsBySong';
+import moment from 'moment';
+import Review from '../interfaces/Review';
 
 
 const SearchBar = (props: any ) => {
@@ -30,26 +33,31 @@ interface SongCardProps {
 }
 const SongCard: React.FC<SongCardProps> = (props) => {
   const { title, picture, artist, album, api_id, genres, databaseSongs } = props;
-
-  const navigate = useNavigate(); // Use useNavigate for programmatic navigation
+  const [reviewCount, setReviewCount] = useState<number | null>(null);
+  const [mostRecentReview, setMostRecentReview] = useState<Review | null>(null);
+  const navigate = useNavigate();
 
   const songExistsInDatabase = (apiId: string, songs: Song[]) => {
-    return songs.some((song) => song.api_id.toString() === apiId);
+    return songs.some((song) => song.api_id === apiId);
   };
 
   const getDatabaseSongId = (apiId: string, songs: Song[]) => {
-    console.log("songssit: ", songs)
-    const foundSong = songs.find((song) => song.api_id.toString() === apiId);
-    console.log("foundSong: ", foundSong);
+    const foundSong = songs.find((song) => song.api_id === apiId);
     return foundSong ? foundSong.id : null;
   };
 
-  const handleSongCardClick = () => {
-    console.log("api_id of the song: ", api_id);
-    console.log("songExistsInDatabase: ", songExistsInDatabase(api_id, databaseSongs));
-    console.log("databaseSongs api_id: ", getDatabaseSongId(api_id, databaseSongs));
+  // Fetch reviews when the SongCard component is created
+  useEffect(() => {
     if (songExistsInDatabase(api_id, databaseSongs)) {
-      console.log("Exists");
+      const songId = getDatabaseSongId(api_id, databaseSongs);
+      if (songId) {
+        fetchReviewsForSong(songId);
+      }
+    }
+  }, [api_id, databaseSongs]);
+
+  const handleSongCardClick = () => {
+    if (songExistsInDatabase(api_id, databaseSongs)) {
       const songId = getDatabaseSongId(api_id, databaseSongs);
       if (songId) {
         // Use the navigate function to navigate to the song page
@@ -75,11 +83,42 @@ const SongCard: React.FC<SongCardProps> = (props) => {
     }
   };
 
+  const fetchReviewsForSong = async (songId: string) => {
+    try {
+      const reviews = await getReviewsBySong(songId);
+      setReviewCount(reviews.length);
+      setMostRecentReview(getMostRecentReview(reviews));
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    }
+  };
+
+  const getMostRecentReview = (reviews: Review[]): Review | null => {
+    if (reviews.length === 0) {
+      return null;
+    }
+    const sortedReviews = [...reviews].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    return sortedReviews[0];
+  };
+
   return (
-    <div className="song-card" onClick={handleSongCardClick}>
-      <h1>{title}</h1>
-      <img src={picture} alt={title} />
+    <div className="song-card" >
+      <h1 onClick={handleSongCardClick} >{title}</h1>
+      <img src={picture} alt={title} onClick={handleSongCardClick} />
       <p>Artist: {artist}</p>
+      {reviewCount !== null && reviewCount > 0 && (
+        <div>
+          <p>{reviewCount} Reviews</p>
+          {mostRecentReview && (
+            <div>
+              <p>Most Recent Review:</p>
+              <p>Title: {mostRecentReview.title}</p>
+              <p>By: <Link to={'/user/' + mostRecentReview.user.id} style={{ textDecoration: 'none' }}>{mostRecentReview.user.username}</Link></p>
+              <p>Added {moment(mostRecentReview.createdAt).fromNow()}</p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
@@ -103,25 +142,44 @@ const SongSearch = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [songList, setSongList] = useState<DeezerSong[]>([]);
   const [databaseSongs, setDatabaseSongs] = useState<Song[]>([]);
+  const [showTopRatedSongs, setShowTopRatedSongs] = useState(true);
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.value);
     setSearchQuery(event.target.value);
     console.log(songList)
   }
   
-  
+  const toggleShowTopRatedSongs = async () => {
+    setShowTopRatedSongs(!showTopRatedSongs);
+  };
+
+  const sortSongsByReviews = async (songs: Song[]) => {
+    const songsWithReviewCounts = [];
+
+    for (const song of songs) {
+      const reviews = await getReviewsBySong(song.id);
+      const reviewCount = reviews.length;
+      songsWithReviewCounts.push({ song, reviewCount });
+    }
+
+    songsWithReviewCounts.sort((a, b) => b.reviewCount - a.reviewCount);
+
+    const sortedSongs = songsWithReviewCounts.map((item) => item.song);
+
+    return sortedSongs;
+  };
   useEffect(() => {
-    async function fetchSongs() {
+    async function fetchAndSortSongs() {
       try {
-        const songData = await getSongs();
-        console.log("biisit databeissis: ", songData)
-        setDatabaseSongs(songData);
+        const songs = await getSongs();
+        const sortedSongs = await sortSongsByReviews(songs);
+        setDatabaseSongs(sortedSongs);
       } catch (error) {
-        console.error('Error fetching reviews:', error);
+        console.error('Error fetching and sorting songs:', error);
       }
     }
 
-    fetchSongs();
+    fetchAndSortSongs();
   }, []);
   console.log(databaseSongs)
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -138,6 +196,7 @@ const SongSearch = () => {
         }));
         setSongList(result);
         setSearchQuery('');
+        setShowTopRatedSongs(false);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
@@ -145,26 +204,46 @@ const SongSearch = () => {
   };
   return (
     <div className="App">
-      <SearchBar handleSearchSubmit={handleSearchSubmit} handleSearchChange={handleSearchChange} setSearchQuery={setSearchQuery}/>
+      <SearchBar
+        handleSearchSubmit={handleSearchSubmit}
+        handleSearchChange={handleSearchChange}
+      />
+      <button onClick={toggleShowTopRatedSongs} className="top-rated-button">
+        {showTopRatedSongs ? 'Hide Most Popular Songs' : 'Show Most Popular Songs'}
+      </button>
       <div className="song-list">
         <ul className="list-unstyled">
-          {songList.map((song) => (
-            <li>
+          {showTopRatedSongs
+            ? databaseSongs.slice(0, 5).map((song) => (
+                <li key={song.id}>
                   <SongCard
-      title={song.title}
-      picture={song.picture}
-      album={song.album}
-      artist={song.artist}
-      api_id={song.id}
-      genres={song.genres}
-      databaseSongs={databaseSongs}
-    ></SongCard>
-            </li>
-          ))}
+                    title={song.song_name}
+                    picture={song.thumbnail}
+                    album={song.album}
+                    artist={song.artist}
+                    api_id={song.api_id}
+                    genres={song.genres}
+                    databaseSongs={databaseSongs}
+                  />
+                </li>
+              ))
+            : songList.map((song) => (
+                <li key={song.id}>
+                  <SongCard
+                    title={song.title}
+                    picture={song.picture}
+                    album={song.album}
+                    artist={song.artist}
+                    api_id={song.id}
+                    genres={song.genres}
+                    databaseSongs={databaseSongs}
+                  />
+                </li>
+              ))}
         </ul>
       </div>
     </div>
   );
-}
+};
 
 export default SongSearch;

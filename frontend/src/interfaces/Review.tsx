@@ -4,6 +4,7 @@ interface Review {
     comment: string
     rating: number,
     song : {
+        id: string,
         song_name: string,
         thumbnail: string,
         genres: string[],
