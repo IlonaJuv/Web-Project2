@@ -37,9 +37,10 @@ const userPost = async (
       return;
     }
     user.password = await bcrypt.hash(user.password, salt);
-    const token = jwt.sign({id: user._id}, process.env.JWT_SECRET as string);
 
     const newUser = await userModel.create(user);
+    const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET as string);
+
     const response: DBMessageResponse = {
       message: 'User created',
       data: {

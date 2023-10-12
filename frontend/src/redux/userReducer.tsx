@@ -5,6 +5,10 @@ import User from '../interfaces/User';
 import { RootState } from "../redux/store";
 import { signup, signin } from '../services/userService';
 import { LoginResponse } from '../interfaces/Responses';
+const storedUser = (localStorage.getItem('user'));
+const storedToken = localStorage.getItem('token');
+
+
 
 export interface UserState {
   loading: boolean;
@@ -15,10 +19,11 @@ export interface UserState {
 
 const initialState: UserState = {
   loading: false,
-  user: {},
+  user: storedUser ? JSON.parse(storedUser) : {},
   error: "",
-  token: "",
+  token: storedToken || "",
 }
+console.log("initialState", initialState)
 const userSlice = createSlice({
   name: 'user',
   initialState,
