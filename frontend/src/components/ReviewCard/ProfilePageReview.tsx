@@ -188,7 +188,7 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
                     placeholder="Title"
                     value={editedTitle}
                     onChange={handleTitleChange}
-                    minLength={5}
+                    minLength={3}
                     maxLength={50}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -217,8 +217,8 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
                     placeholder="Comment"
                     value={editedComment}
                     onChange={handleCommentChange}
-                    minLength={10}
-                    maxLength={500}
+                    minLength={20}
+                    maxLength={250}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please provide a valid comment.
