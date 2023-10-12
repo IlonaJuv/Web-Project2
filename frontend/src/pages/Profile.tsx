@@ -6,17 +6,26 @@ import Review from '../interfaces/Review';
 import { getReviews } from '../hooks/getReviews';
 import ProfilePageReview from '../components/ReviewCard/ProfilePageReview';
 import { deleteReview } from '../hooks/deleteReview';
+import { likeReview } from '../hooks/likeReview';
+import { editReview } from '../hooks/editReview';
+import { Dropdown } from 'react-bootstrap';
+import { getReviewsLikedByUser } from '../hooks/getReviewsLikedByUser';
 
 const ProfilePage: React.FC = () => {
   const userId = useParams().userId;
   const [user, setUser] = useState<User | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [orderByDateNewest, setOrderByDateNewest] = useState(false);
+  const [orderByDateOldest, setOrderByDateOldest] = useState(false);
+  const [orderByLikesLeast, setOrderByLikesLeast] = useState(false);
+  const [orderByLikesMost, setOrderByLikesMost] = useState(false);
   const userString = localStorage.getItem('user');
   const loggedUser: User = userString ? JSON.parse(userString) : null;
   let userIdString = "none";
   if (loggedUser.id != null) {
     userIdString = loggedUser.id;
   }
+  const [fetchLiked, setFetchLiked] = useState(false);
   useEffect(() => {
     async function fetchUserData() {
       try {
@@ -33,7 +42,16 @@ const ProfilePage: React.FC = () => {
   useEffect(() => {
     async function fetchReviews() {
       try {
-        const reviewsData = await getReviews(userId || '');
+        let reviewsData = [] as Review[];
+        if (!fetchLiked) {
+          console.log("user", userId)
+          reviewsData = await getReviews(userId || '');
+        }
+        else {
+          console.log("user", userId)
+          reviewsData = await getReviewsLikedByUser(userId || '');
+        }
+        
         setReviews(reviewsData);
         console.log(reviewsData);
       } catch (error) {
@@ -42,24 +60,115 @@ const ProfilePage: React.FC = () => {
     }
 
     fetchReviews();
-  }, [userId]);
+  }, [userId, fetchLiked]);
   
   const handleReviewDeletion = async (deletedReviewId: string) => {
     const token = localStorage.getItem("token") || "";
     await deleteReview(token,deletedReviewId);
-    const reviewsData = await getReviews(userId || '');
-    setReviews(reviewsData);
+    if(!fetchLiked) {
+      const reviewsData = await getReviews(userId || '');
+      setReviews(reviewsData);
+    }
+    else {
+      const reviewsData = await getReviewsLikedByUser(userId || '');
+      setReviews(reviewsData);
+    }
   };
+  const handleReviewEdit = async (editedReviewId: string, editedRating?: number, editedComment?: string, editedTitle?: string) => {
+    const token = localStorage.getItem('token') || '';
+    await editReview(
+      token,
+      editedReviewId,
+      editedRating,
+      editedComment,
+      editedTitle
+    );
+    if(!fetchLiked) {
+      const reviewsData = await getReviews(userId || '');
+      setReviews(reviewsData);
+    }
+    else {
+      const reviewsData = await getReviewsLikedByUser(userId || '');
+      setReviews(reviewsData);
+    }
+  };
+  const handleReviewLike = async (likedReviewId: string) => {
+    const token = localStorage.getItem('token') || '';
+    await likeReview(likedReviewId, token);
+    if(!fetchLiked) {
+      const reviewsData = await getReviews(userId || '');
+      setReviews(reviewsData);
+    }
+    else {
+      const reviewsData = await getReviewsLikedByUser(userId || '');
+      setReviews(reviewsData);
+    }
+  };
+
+  const sortedReviews = [...reviews] || [];
+
+  if (orderByDateNewest) {
+    sortedReviews.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  } else if (orderByDateOldest) {
+    sortedReviews.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  } else if (orderByLikesLeast) {
+    sortedReviews.sort((a, b) => a.likes.length - b.likes.length);
+  } else if (orderByLikesMost) {
+    sortedReviews.sort((a, b) => b.likes.length - a.likes.length);
+  }
+
   return (
     <div>
       {user ? (
         <div>
           <h1 className="text-center">{user.username}'s profile</h1>
           <h2 className="text-center">Reviews</h2>
+          <button onClick={() => setFetchLiked(true)}>Liked Reviews</button>
+          <button  onClick={() => setFetchLiked(false)}>Created Reviews</button>
+          <Dropdown>
+                    <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                      Sort reviews by
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                      <Dropdown.Item onClick={() => {
+                        setOrderByDateNewest(true);
+                        setOrderByDateOldest(false);
+                        setOrderByLikesLeast(false);
+                        setOrderByLikesMost(false);
+                        }}>
+                        Newest to oldest
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => {
+                        setOrderByDateNewest(false);
+                        setOrderByDateOldest(true);
+                        setOrderByLikesLeast(false);
+                        setOrderByLikesMost(false);
+                        }}>
+                        Odest to Newest
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => {
+                        setOrderByDateNewest(false);
+                        setOrderByDateOldest(false);
+                        setOrderByLikesLeast(false);
+                        setOrderByLikesMost(true);
+                        }}>
+                        Most likes
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => {
+                        setOrderByDateNewest(false);
+                        setOrderByDateOldest(false);
+                        setOrderByLikesLeast(true);
+                        setOrderByLikesMost(false);
+                        }}>
+                        Least likes
+                      </Dropdown.Item>
+                      </Dropdown.Menu>
+                  </Dropdown>
           {reviews.length > 0 ? (
             <div className="container">
               <div className="row justify-content-center">
-                {reviews.map((review, index) => (
+                {sortedReviews.map((review, index) => (
                   
                   <ProfilePageReview
                     key={index}
@@ -80,6 +189,8 @@ const ProfilePage: React.FC = () => {
                     index={index}
                     loggedUserId={userIdString}
                     handleReviewDeletion={handleReviewDeletion}
+                    handleReviewEdit={handleReviewEdit}
+                    handleReviewLike={handleReviewLike}
                   ></ProfilePageReview>
                 ))}
               </div>

@@ -65,3 +65,11 @@ html {
 #add-review-button {
   margin-top: 5px;  
 }
+
+.full-text {
+  display: block;
+}
+
+.truncated-text {
+  display: none;
+}

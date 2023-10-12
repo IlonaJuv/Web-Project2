@@ -24,6 +24,8 @@ interface ProfilePageReviewProps {
   index: number;
   loggedUserId: string;
   handleReviewDeletion: (reviewId: string) => void; 
+  handleReviewEdit: (reviewId: string, editedRating?: number, editedComment?: string, editedTitle?: string) => void;
+  handleReviewLike: (reviewId: string) => void;
 }
 
 const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
@@ -45,33 +47,30 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
     index,
     loggedUserId,
     handleReviewDeletion,
+    handleReviewEdit,
+    handleReviewLike
+
   } = props;
   const createdAtDate = new Date(createdAt);
-  const updatedAtDate = new Date(updatedAt);
-  const editedString = (updatedAtDate > createdAtDate ? '(edited)' : '');
-  const [likesOfReview, setLikesOfReview] = useState(likes);
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasLiked, setHasLiked] = useState(likes.includes(loggedUserId));
+  
+ 
+  const [isLoading, setIsLoading] = useState(false);;
   const [isEditing, setIsEditing] = useState(false);
   const [editedRating, setEditedRating] = useState(rating);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedComment, setEditedComment] = useState(comment);
   const [originalRating] = useState(rating); 
-  const [editedText, setEditedText] = useState(editedString);
   const [validated, setValidated] = useState(false);
 
   const handleToggleLikeReview = async (reviewId: string) => {
     setIsLoading(true);
-    const token = localStorage.getItem("token") || "";
-    const newLikes = await likeReview(reviewId, token);
-
-    setLikesOfReview(newLikes);
+    handleReviewLike(reviewId);
     setIsLoading(false);
-    setHasLiked(newLikes.includes(loggedUserId));
   };
 
   const handleEdit = () => {
     setIsEditing(true);
+    setValidated(false);
   };
 
   const handleSaveEdit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -90,22 +89,7 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
       return;
     }
 
-    const token = localStorage.getItem("token") || "";
-    await editReview(
-      token,
-      id,
-      isRatingEdited ? editedRating : undefined,
-      isCommentEdited ? editedComment : undefined, 
-      isTitleEdited ? editedTitle : undefined 
-    );
-
-    setEditedRating(editedRating);
-    if(editedText !== '(edited)'){
-        setEditedText('(edited)');
-    }
-    
-    setEditedTitle(editedTitle);
-    setEditedComment(editedComment);
+    handleReviewEdit(id, editedRating, editedComment, editedTitle);
     setValidated(false);
     setIsEditing(false);
     }
@@ -262,8 +246,8 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
                 {title}
               </h4>
               <p className="card-text">
-            {showFullText ? editedComment : editedComment.slice(0, maxCharacters)}
-            {editedComment.length > maxCharacters && (
+            {showFullText ? comment : comment.slice(0, maxCharacters)}
+            {comment.length > maxCharacters && (
             <button
               onClick={() => setShowFullText(!showFullText)}
               className="btn btn-link"
@@ -279,7 +263,7 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
                 onClick={() => handleToggleLikeReview(id)}
                 disabled={isLoading}
                 style={{
-                  textShadow: hasLiked ? "0px 0px 15px #FF0000" : "none",
+                  textShadow: likes.includes(loggedUserId) ? "0px 0px 15px #FF0000" : "none",
                   fontSize: "20px",
                   background: "none",
                   border: "none",
@@ -290,7 +274,7 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
               >
                 💖
                 <span className="ms-1 shadow-none">
-                  {likesOfReview.length}
+                  {likes.length}
                 </span>
               </button>
               
@@ -301,7 +285,7 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
             <h4 className="card-text">
               {moment(createdAtDate).fromNow()}
             </h4>
-            <p className="text-muted ms-1 mt-1"><small>{editedText}</small></p>
+            <p className="text-muted ms-1 mt-1"><small>{createdAt !== updatedAt ? "(edited)" : null}</small></p>
           </div>
         </div>
       </div>
