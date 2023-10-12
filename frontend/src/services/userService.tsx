@@ -5,7 +5,7 @@ import { login, register } from '../graphql/queries'
 import { doGraphQLFetch } from '../graphql/fetchGraphql'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { LoginResponse, RegisterResponse } from '../interfaces/Responses'
-import { error } from 'console'
+
 
 const url = process.env.REACT_APP_API_URL as string
 
@@ -38,3 +38,4 @@ export const signin = createAsyncThunk(
     return rejectWithValue(data.errors[0].message)
   }
 );
+
