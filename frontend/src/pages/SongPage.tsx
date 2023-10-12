@@ -38,6 +38,8 @@ const SongPage: React.FC = () => {
   }
 
   const toggleReviewForm = () => {
+    setNewReview({ rating: 1, title: '', text: '' });
+    setValidated(false);
     setIsAddingReview(!isAddingReview);
   };
 
@@ -49,6 +51,11 @@ const SongPage: React.FC = () => {
       ...prevReview,
       [name]: value,
     }));
+    const form = e.target.form;
+    if (form) {
+      form.checkValidity();
+      
+    }
   };
 
   const handleSubmitNewReview = async (e: React.FormEvent) => {
@@ -65,6 +72,8 @@ const SongPage: React.FC = () => {
       await createReview(newReview.rating, newReview.text, newReview.title, songIdString, token);
       const reviewsData = await getReviewsBySong(songIdString);
       setReviews(reviewsData);
+      setNewReview({ rating: 1, title: '', text: '' });
+      setValidated(false);
       setIsAddingReview(false);
     }
 
@@ -221,7 +230,7 @@ const SongPage: React.FC = () => {
                       </Dropdown.Menu>
                   </Dropdown>
                 </div>
-                <Button variant="primary"  onClick={toggleReviewForm}>Add a Review</Button>
+                <Button variant="primary"  onClick={toggleReviewForm} id='add-review-button'>Add a Review</Button>
               </div>
               <div className="ms-5 mt-5">
                 {isAddingReview ? (
