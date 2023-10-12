@@ -160,7 +160,7 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
                 </div>
               ): null}
           </div>
-          <h4 className="card-text">By: <Link key={index} to={'/user/' + userId} style={{ textDecoration: 'none' }}>{username}</Link></h4>
+          <h4 className="card-text text-center">By: <Link key={index} to={'/user/' + userId} style={{ textDecoration: 'none' }}>{username}</Link></h4>
           {isEditing ? (
             <div>
               <Form noValidate validated={validated} onSubmit={handleSaveEdit}>
@@ -223,21 +223,23 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
           ) : (
             
             <div>
+                <div className="d-flex justify-content-center">
                 <img
                     src={song_thumbnail}
                     className="card-img-top mb-3"
                     alt={song_name}
-                    style={{ width: '100%', height: '250px', objectFit: 'cover' }}
+                    style={{ width: "300px", height: '300px', objectFit: 'cover' }}
                     onError={({currentTarget}) => {
                         currentTarget.onerror = null;
                         currentTarget.src = "not_found.png"
                     }}
                 />
+                </div>
                 <Link style={{ textDecoration: 'none' }} to={"/song/" + song_id}>
-                <h4 className="card-title">{song_name}</h4>
+                <h4 className="card-title text-center">{song_name}</h4>
                 </Link>
-                <p className="card-text mb-1">{song_artist}</p>
-                <div className="d-flex gap-2">
+                <p className="card-text mb-1 text-center">{song_artist}</p>
+                <div className="d-flex gap-2 justify-content-center">
                     {song_genres.map((genre, genreIndex) => (
                         <p key={genreIndex} className="card-text mr-3">{genre}</p>
                     ))}
