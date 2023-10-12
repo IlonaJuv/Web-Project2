@@ -67,3 +67,42 @@ app.get<{}, { msg: string }>('/', (req, res) => {
 
 
 export default app;
+
+/*
+//save brute force attack add for later 
+import {
+    ApolloServerPluginLandingPageLocalDefault,
+    ApolloServerPluginLandingPageProductionDefault,
+  } from '@apollo/server/plugin/landingPage/default';
+import {createRateLimitRule} from 'graphql-rate-limit';
+import {shield} from 'graphql-shield';
+import {makeExecutableSchema} from '@graphql-tools/schema';
+import {applyMiddleware} from 'graphql-middleware';
+
+import authenticate from './utils/authenticate';
+const app = express();
+
+(async () => {
+    try {
+      const rateLimitRule = createRateLimitRule({
+        identifyContext: (ctx) => ctx.id,
+      });
+      // TODO Create a permissions object
+  
+      const permissions = shield({
+        Mutation: {
+          login: rateLimitRule({window: '1s', max: 5}),
+        },
+      });
+      // TODO Apply the permissions object to the schema
+      // remember to change the typeDefs and resolvers to a schema object
+      const schema = applyMiddleware(
+        makeExecutableSchema({
+          typeDefs,
+          resolvers,
+        }),
+        permissions
+      );
+      //
+      //
+ */
