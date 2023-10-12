@@ -43,6 +43,11 @@ export default {
               return reviews;
             }
           },
+          reviewsLikedByUser: async (_parent: undefined, args: { userId: string }) => {
+            const reviews = await ReviewModel.find({ likes: args.userId });
+            return reviews;
+          }
+
     },
     Mutation: {
         createReview: async (_parent: undefined, args: Review, user: UserIdWithToken) => {
