@@ -111,9 +111,7 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
       <div className="card">
         <div className="card-body song-page-card-min-height">
           <div className="d-flex">
-            <Link key={index} to={"/user/" + userId}>
-              <h4 className="card-text">By: {username}</h4>
-            </Link>
+            <h4 className="card-text">By: <Link key={index} to={"/user/" + userId} style={{ textDecoration: 'none' }}>{username}</Link></h4>
             <div className="d-flex justify-content-end ms-3">
               {userId === loggedUserId && !isEditing && (
                 <span

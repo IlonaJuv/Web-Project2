@@ -15,9 +15,12 @@ import Review from '../interfaces/Review';
 const SearchBar = (props: any ) => {
   return (
     <div>
-      <form className="col-20 col-lg-auto mb-3 mb-lg-0 me-lg-3 mt-3" role="search" id="search-form" onSubmit={props.handleSearchSubmit}>
-        <input type="search" value={props.searchQuery} className="form-control form-control-dark text-bg-dark" placeholder="Search..."
-         aria-label="Search" id="search-input" onChange={props.handleSearchChange}/> 
+      <form className="col-20 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search" id="search-form" onSubmit={props.handleSearchSubmit}>
+        <div className="d-flex">
+          <input type="search" value={props.searchQuery} className="form-control form-control-dark text-bg-dark" placeholder="Search..."
+          aria-label="Search" id="search-input" onChange={props.handleSearchChange}/> 
+          <span className="material-symbols-outlined mt-2 ms-3" role="button" onClick={props.handleSearchSubmit}>search</span>
+        </div>
       </form>
     </div>
   );
@@ -103,22 +106,28 @@ const SongCard: React.FC<SongCardProps> = (props) => {
 
   return (
     <div className="song-card" >
-      <h1 onClick={handleSongCardClick} >{title}</h1>
-      <img src={picture} alt={title} onClick={handleSongCardClick} />
-      <p>Artist: {artist}</p>
-      {reviewCount !== null && reviewCount > 0 && (
-        <div>
-          <p>{reviewCount} Reviews</p>
-          {mostRecentReview && (
-            <div>
-              <p>Most Recent Review:</p>
-              <p>Title: {mostRecentReview.title}</p>
-              <p>By: <Link to={'/user/' + mostRecentReview.user.id} style={{ textDecoration: 'none' }}>{mostRecentReview.user.username}</Link></p>
-              <p>Added {moment(mostRecentReview.createdAt).fromNow()}</p>
-            </div>
-          )}
+      <h3 onClick={handleSongCardClick} >{title}</h3>
+      <div className="d-flex">
+      <img src={picture} alt={title} onClick={handleSongCardClick} className="cursor-pointer" />
+        <div className="ms-3 mt-3">
+        <p>Artist: {artist}</p>
+        {reviewCount !== null && reviewCount > 0 ? (
+          <div className="mt-1">
+            <p>{reviewCount} Reviews</p>
+            {mostRecentReview && (
+              <div>
+                <p className="mb-0">Review by <Link to={'/user/' + mostRecentReview.user.id} style={{ textDecoration: 'none' }}>{mostRecentReview.user.username}</Link></p>
+                <p className="mb-0">{mostRecentReview.title}</p>
+                <p>{mostRecentReview.rating}/5</p>
+                <p>{moment(mostRecentReview.createdAt).fromNow()}</p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <p>No reviews posted yet</p>
+        )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
@@ -204,43 +213,61 @@ const SongSearch = () => {
   };
   return (
     <div className="App">
-      <SearchBar
-        handleSearchSubmit={handleSearchSubmit}
-        handleSearchChange={handleSearchChange}
-      />
-      <button onClick={toggleShowTopRatedSongs} className="top-rated-button">
-        {showTopRatedSongs ? 'Hide Most Popular Songs' : 'Show Most Popular Songs'}
-      </button>
-      <div className="song-list">
-        <ul className="list-unstyled">
-          {showTopRatedSongs
-            ? databaseSongs.slice(0, 5).map((song) => (
-                <li key={song.id}>
-                  <SongCard
-                    title={song.song_name}
-                    picture={song.thumbnail}
-                    album={song.album}
-                    artist={song.artist}
-                    api_id={song.api_id}
-                    genres={song.genres}
-                    databaseSongs={databaseSongs}
-                  />
-                </li>
-              ))
-            : songList.map((song) => (
-                <li key={song.id}>
-                  <SongCard
-                    title={song.title}
-                    picture={song.picture}
-                    album={song.album}
-                    artist={song.artist}
-                    api_id={song.id}
-                    genres={song.genres}
-                    databaseSongs={databaseSongs}
-                  />
-                </li>
-              ))}
-        </ul>
+      <div className="row">
+        <div className="col-md-6">
+          <div className="left-panel">
+            <h2>Top rated</h2>
+            <div className="song-list">
+              <ul className="list-unstyled">
+                {
+                  databaseSongs.slice(0, 5).map((song) => (
+                    <div className="mb-5">
+                      <li key={song.id}>
+                        <SongCard
+                          title={song.song_name}
+                          picture={song.thumbnail}
+                          album={song.album}
+                          artist={song.artist}
+                          api_id={song.api_id}
+                          genres={song.genres}
+                          databaseSongs={databaseSongs}
+                        />
+                      </li>
+                    </div>
+                  ))
+                }
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6">
+          <div className="right-panel">
+            <div className="d-flex">
+              <h2>Search</h2>
+              <div className="ms-3">
+              <SearchBar
+                handleSearchSubmit={handleSearchSubmit}
+                handleSearchChange={handleSearchChange}
+              />
+              </div>
+            </div>
+            <ul className="list-unstyled">
+            {songList.map((song) => (
+                      <li key={song.id}>
+                        <SongCard
+                          title={song.title}
+                          picture={song.picture}
+                          album={song.album}
+                          artist={song.artist}
+                          api_id={song.id}
+                          genres={song.genres}
+                          databaseSongs={databaseSongs}
+                        />
+                      </li>
+                    ))}
+              </ul>
+          </div>
+        </div>
       </div>
     </div>
   );
