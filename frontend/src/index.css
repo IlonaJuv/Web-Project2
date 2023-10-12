@@ -56,3 +56,12 @@ html {
   justify-content: center;
   width: 100%;
 }
+
+#dropdown-basic {
+  margin-top: 5px;
+  margin-right: 5px;
+}
+
+#add-review-button {
+  margin-top: 5px;  
+}

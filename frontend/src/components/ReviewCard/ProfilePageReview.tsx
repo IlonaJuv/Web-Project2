@@ -106,7 +106,7 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
     
     setEditedTitle(editedTitle);
     setEditedComment(editedComment);
-
+    setValidated(false);
     setIsEditing(false);
     }
 
@@ -117,7 +117,7 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
     setEditedRating(originalRating);
     setEditedTitle(title);
     setEditedComment(comment);
-
+    setValidated(false);
     setIsEditing(false);
   };
 
@@ -134,7 +134,27 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
     if (newRating >= 1 && newRating <= 5) {
       setEditedRating(newRating);
     }
+    const form = e.target.form;
+    if (form) {
+      form.checkValidity();
+    }
   };
+  const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newComment = e.target.value;
+    setEditedComment(newComment);
+    const form = e.target.form;
+    if (form) {
+      form.checkValidity();
+    }
+  }
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTitle = e.target.value;
+    setEditedTitle(newTitle);
+    const form = e.target.form;
+    if (form) {
+      form.checkValidity();
+    }
+  }
 
   const maxCharacters = 100; 
   const [showFullText, setShowFullText] = useState(false);
@@ -167,7 +187,7 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
                     type="text"
                     placeholder="Title"
                     value={editedTitle}
-                    onChange={(e) => setEditedTitle(e.target.value)}
+                    onChange={handleTitleChange}
                     minLength={5}
                     maxLength={50}
                   />
@@ -196,7 +216,7 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
                     required
                     placeholder="Comment"
                     value={editedComment}
-                    onChange={(e) => setEditedComment(e.target.value)}
+                    onChange={handleCommentChange}
                     minLength={10}
                     maxLength={500}
                   />

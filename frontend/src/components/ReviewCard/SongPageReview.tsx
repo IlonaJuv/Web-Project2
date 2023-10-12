@@ -59,6 +59,7 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
 
   const handleEdit = () => {
     setIsEditing(true);
+    setValidated(false);
   };
 
   const handleSaveEdit = async (e: React.FormEvent<HTMLFormElement> ) => {
@@ -78,7 +79,7 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
         return;
       }
       handleReviewEdit(id, editedRating, editedComment, editedTitle);
-
+      setValidated(false);
       setIsEditing(false);
     }
     setValidated(true);
@@ -88,7 +89,7 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
     setEditedRating(originalRating);
     setEditedTitle(title);
     setEditedComment(comment);
-
+    setValidated(false);
     setIsEditing(false);
   };
 
@@ -105,7 +106,28 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
     if (newRating >= 1 && newRating <= 5) {
       setEditedRating(newRating);
     }
+    const form = e.target.form;
+    if (form) {
+      form.checkValidity();
+    }
+
   };
+  const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newComment = e.target.value;
+    setEditedComment(newComment);
+    const form = e.target.form;
+    if (form) {
+      form.checkValidity();
+    }
+  }
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTitle = e.target.value;
+    setEditedTitle(newTitle);
+    const form = e.target.form;
+    if (form) {
+      form.checkValidity();
+    }
+  }
   return (
     <div key={index} className="col-md-3 mb-3">
       <div className="card">
@@ -143,7 +165,7 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
                     type="text"
                     placeholder="Title"
                     value={editedTitle}
-                    onChange={(e) => setEditedTitle(e.target.value)}
+                    onChange={handleTitleChange}
                     minLength={5}
                     maxLength={50}
                   />
@@ -172,7 +194,7 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
                     required
                     placeholder="Comment"
                     value={editedComment}
-                    onChange={(e) => setEditedComment(e.target.value)}
+                    onChange={handleCommentChange}
                     minLength={10}
                     maxLength={500}
                   />
