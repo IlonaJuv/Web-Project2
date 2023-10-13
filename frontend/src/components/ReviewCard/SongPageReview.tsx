@@ -50,6 +50,8 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
   const [editedComment, setEditedComment] = useState(comment);
   const [originalRating] = useState(rating); 
   const [validated, setValidated] = useState(false);
+  const [showFullText, setShowFullText] = useState(false);
+  const maxCharacters = 100;
 
   const handleToggleLikeReview = async (reviewId: string) => {
     setIsLoading(true);
@@ -129,10 +131,10 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
     }
   }
   return (
-    <div key={index} className="col-md-3 mb-3">
+    <div key={index} className="col-md-4 mb-3">
       <div className="card">
-        <div className="card-body song-page-card-min-height">
-          <div className="d-flex">
+        <div className="card-body song-page-card-min-height text-center" style={{ position: "relative", padding: "20px" }}>
+          <div className="d-flex justify-content-center">
             <h4 className="card-text">By: <Link key={index} to={"/user/" + userId} style={{ textDecoration: 'none' }}>{username}</Link></h4>
             <div className="d-flex justify-content-end ms-3">
               {userId === loggedUserId && !isEditing && (
@@ -215,12 +217,23 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
               </Form>
             </div>
           ) : (
-            <div>
+            <div style={{marginBottom: "60px"}}>
               <h4 className="card-text mt-4">
                 {title}
               </h4>
-              <p className="card-text">{comment}</p>
+              <p className="card-text">
+            {showFullText ? comment : comment.slice(0, maxCharacters)}
+            {comment.length > maxCharacters && (
+            <button
+              onClick={() => setShowFullText(!showFullText)}
+              className="btn btn-link"
+            >
+              {showFullText ? 'Read less' : 'Read more'}
+            </button>
+          )}
+            </p>
               <h4 className="card-text">{rating}/5</h4>
+              <div className="mt-5" style={{position: "absolute", bottom: "10px", left: "10px"}}>
               <button
                 onClick={() => handleToggleLikeReview(id)}
                 disabled={isLoading}
@@ -241,12 +254,13 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
                   {likes.length}
                 </span>
               </button>
-            </div>
-          )}
-          <div className="d-flex">
+              <div className="d-flex">
             <h4 className="card-text">{moment(createdAtDate).fromNow()}</h4>
             <p className="text-muted ms-1 mt-1"><small>{createdAt !== updatedAt ? "(edited)" : null}</small></p>
           </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
