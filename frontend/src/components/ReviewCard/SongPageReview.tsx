@@ -50,6 +50,8 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
   const [editedComment, setEditedComment] = useState(comment);
   const [originalRating] = useState(rating); 
   const [validated, setValidated] = useState(false);
+  const [showFullText, setShowFullText] = useState(false);
+  const maxCharacters = 100;
 
   const handleToggleLikeReview = async (reviewId: string) => {
     setIsLoading(true);
@@ -219,7 +221,17 @@ const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
               <h4 className="card-text mt-4">
                 {title}
               </h4>
-              <p className="card-text">{comment}</p>
+              <p className="card-text">
+            {showFullText ? comment : comment.slice(0, maxCharacters)}
+            {comment.length > maxCharacters && (
+            <button
+              onClick={() => setShowFullText(!showFullText)}
+              className="btn btn-link"
+            >
+              {showFullText ? 'Read less' : 'Read more'}
+            </button>
+          )}
+            </p>
               <h4 className="card-text">{rating}/5</h4>
               <button
                 onClick={() => handleToggleLikeReview(id)}
