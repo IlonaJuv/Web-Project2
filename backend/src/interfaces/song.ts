@@ -9,4 +9,15 @@ interface Song extends Document {
     api_id: string;
 }
 
-export {Song}
+interface SongTest {
+    id?: string;
+    song_name?: string;
+    songName?: string;
+    thumbnail?: string;
+    artist?: string;
+    album?: string;
+    genres?: string[];
+    api_id?: string;
+}
+
+export {Song, SongTest}

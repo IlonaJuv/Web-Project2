@@ -12,4 +12,16 @@ interface Review extends Document {
     updatedAt: Date;
 }
 
-export {Review}
+interface ReviewTest {
+    id?: string;
+    likes?: string[];
+    song?: string | Types.ObjectId | Song;
+    user?: User | Types.ObjectId;
+    rating?: number;
+    comment?: string;
+    title?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+export {Review, ReviewTest}
