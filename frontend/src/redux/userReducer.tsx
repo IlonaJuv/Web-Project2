@@ -23,7 +23,6 @@ const initialState: UserState = {
   error: "",
   token: storedToken || "",
 }
-console.log("initialState", initialState)
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -44,9 +43,6 @@ const userSlice = createSlice({
     builder.addCase(signup.fulfilled, (state, action) => {
       state.loading = false
       state.user = action.payload as User
-      console.log("state.user, ", state.user)
-      console.log("action.payload, ", action.payload)
-      console.log("reducer token", (action.payload as User).token as string)
       state.token = (action.payload as User).token as string
     });
     builder.addCase(signup.rejected, (state,action ) => {
@@ -61,9 +57,6 @@ const userSlice = createSlice({
     builder.addCase(signin.fulfilled, (state, action) => {
       state.loading = false
       state.user = action.payload as User
-      console.log("state.user, ", state.user)
-      console.log("action.payload, ", action.payload)
-      console.log("reducer token", action.payload?.token)
       state.token = action.payload?.token as string
     });
     builder.addCase(signin.rejected, (state, action) => {

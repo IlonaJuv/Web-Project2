@@ -44,7 +44,6 @@ export async function createReview(rating: number, comment: string, title: strin
         Authorization: `Bearer ${token}`, 
       },
     });
-    console.log("luodaan ", typeof(rating), typeof(comment), typeof(title), typeof(songId), token, token.length, token.toString);
     const variables = {
         rating: rating,
         comment: comment,
@@ -52,7 +51,6 @@ export async function createReview(rating: number, comment: string, title: strin
         song: songId
     };
     const response: createReviewResponse = await graphQLClient.request(likeReviewMutation, variables);
-    console.log("luodaan ", response);
     
     const createdReview: Review = response.createReview.data;
     return createdReview;

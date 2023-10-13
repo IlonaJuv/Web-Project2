@@ -174,11 +174,9 @@ const SongPage: React.FC = () => {
               <h1 className="text-center ms-5">{song.song_name}</h1>
               <p className="card-text ms-5">By: {song.artist}</p>
               <div className="d-flex ms-5 gap-2">
-                {song.genres.map((genre, genreIndex) => (
-                  <p key={genreIndex} className="card-text mr-3">
-                    {genre}
-                  </p>
-                ))}
+              <div className="d-flex gap-2 justify-content-center">
+                  <p className="card-text mr-3">Album: {song.album}</p>
+                </div>
               </div>
               <input
                   type="text"

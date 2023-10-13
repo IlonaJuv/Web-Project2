@@ -45,16 +45,13 @@ const ProfilePage: React.FC = () => {
       try {
         let reviewsData = [] as Review[];
         if (!fetchLiked) {
-          console.log("user", userId)
           reviewsData = await getReviews(userId || '');
         }
         else {
-          console.log("user", userId)
           reviewsData = await getReviewsLikedByUser(userId || '');
         }
         
         setReviews(reviewsData);
-        console.log(reviewsData);
       } catch (error) {
         console.error('Error fetching reviews:', error);
       }
@@ -217,6 +214,7 @@ const ProfilePage: React.FC = () => {
                     key={index}
                     id={review.id}
                     song_name={review.song.song_name}
+                    album={review.song.album}
                     song_artist={review.song.artist}
                     song_genres={review.song.genres}
                     song_thumbnail={review.song.thumbnail}

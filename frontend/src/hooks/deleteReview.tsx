@@ -48,7 +48,6 @@ export async function deleteReview(token: string, id: string): Promise<Review> {
         deleteReviewId: id
     };
     const response: any = await graphQLClient.request(likeReviewMutation, variables);
-    console.log("luodaan ", response);
     
     const createdReview: Review = response;
     return createdReview;

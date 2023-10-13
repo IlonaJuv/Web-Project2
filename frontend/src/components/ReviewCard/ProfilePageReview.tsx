@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button';
 
 interface ProfilePageReviewProps {
   id: string;
+  album: string;
   song_name: string;
   song_genres: string[];
   song_artist: string;
@@ -31,6 +32,7 @@ interface ProfilePageReviewProps {
 const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
   const {
     id,
+    album,
     song_name,
     song_genres,
     song_artist,
@@ -238,11 +240,9 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
                 <Link style={{ textDecoration: 'none' }} to={"/song/" + song_id}>
                 <h4 className="card-title text-center">{song_name}</h4>
                 </Link>
-                <p className="card-text mb-1 text-center">{song_artist}</p>
+                <h4 className="card-text mb-1 text-center">{song_artist}</h4>
                 <div className="d-flex gap-2 justify-content-center">
-                    {song_genres.map((genre, genreIndex) => (
-                        <p key={genreIndex} className="card-text mr-3">{genre}</p>
-                    ))}
+                  <p className="card-text mr-3">Album: {album}</p>
                 </div>
               <h4 className="card-text mt-4">
                 {title}

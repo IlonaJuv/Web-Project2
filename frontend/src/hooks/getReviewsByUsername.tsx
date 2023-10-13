@@ -35,7 +35,6 @@ export async function getReviewsByUsername(username: string): Promise<Review[]> 
             username: username
         };
         const data: any = await graphQLClient.request(reviewsQuery, variables);
-        console.log(data)
         const reviews: Review[] = data.reviewsBySong;
         return reviews;
 

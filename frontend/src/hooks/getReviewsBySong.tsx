@@ -33,7 +33,6 @@ export async function getReviewsBySong(songId: string): Promise<Review[]> {
             songId: songId
         };
         const data: any = await graphQLClient.request(reviewsQuery, variables);
-        console.log(data)
         const reviews: Review[] = data.reviewsBySong;
         return reviews;
 

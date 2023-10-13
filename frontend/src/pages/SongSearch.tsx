@@ -153,9 +153,7 @@ const SongSearch = () => {
   const [databaseSongs, setDatabaseSongs] = useState<Song[]>([]);
   const [showTopRatedSongs, setShowTopRatedSongs] = useState(true);
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
     setSearchQuery(event.target.value);
-    console.log(songList)
   }
   
   const toggleShowTopRatedSongs = async () => {
@@ -190,7 +188,6 @@ const SongSearch = () => {
 
     fetchAndSortSongs();
   }, []);
-  console.log(databaseSongs)
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     fetch(`${process.env.REACT_APP_DEEZER_URL}/deezer/${searchQuery}`)

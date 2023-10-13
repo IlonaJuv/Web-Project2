@@ -40,7 +40,6 @@ export async function createSong(song_name: string, thumbnail: string, artist: s
         apiId: api_id
     };
     const response: createSongResponse = await graphQLClient.request(likeReviewMutation, variables);
-    console.log("luodaan ", response.addSong);
     
     const createdSong: Song = response.addSong;
     return createdSong;
