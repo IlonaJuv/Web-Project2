@@ -19,7 +19,6 @@ export async function getSongs(): Promise<Song[]> {
         const graphQLClient = new GraphQLClient(API_URL || "", {});
 
         const data: any = await graphQLClient.request(loginUserMutation);
-        console.log(data)
         const songs: Song[] = data.songs;
         return songs;
 

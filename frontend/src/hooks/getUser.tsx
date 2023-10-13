@@ -17,7 +17,6 @@ export async function getUser(userId: string): Promise<User> {
             id: userId
         };
         const data: any = await graphQLClient.request(loginUserMutation, variables);
-        console.log(data.userById);
         const user: User = data.userById;
         return user;
 

@@ -44,7 +44,6 @@ export async function editReview(token: string, id: string, rating?: number, com
         Authorization: `Bearer ${token}`, 
       },
     });
-    console.log("luodaan ", typeof(rating), typeof(comment), typeof(title), typeof(songId), token, token.length, token.toString);
     const variables: { [key: string]: any } = {};
     variables.updateReviewId = id;
     if (typeof rating !== 'undefined') variables.rating = rating;
@@ -52,7 +51,6 @@ export async function editReview(token: string, id: string, rating?: number, com
     if (typeof title !== 'undefined') variables.title = title;
     if (typeof songId !== 'undefined') variables.song = songId;
     const response: any = await graphQLClient.request(likeReviewMutation, variables);
-    console.log("luodaan ", response);
     
     const editedReview: Review = response;
     return editedReview;

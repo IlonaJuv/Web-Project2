@@ -17,12 +17,10 @@ export async function getSong(songId: string): Promise<Song> {
             }
         `;
         const graphQLClient = new GraphQLClient(API_URL || "", {});
-        console.log("bisi id",songId);
         const variables = {
             songByIdId: songId
         };
         const data: any = await graphQLClient.request(songQuery, variables);
-        console.log("bisidata",data.songById);
         const song: Song = data.songById;
         return song;
 

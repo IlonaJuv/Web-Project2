@@ -50,7 +50,6 @@ export async function likeReview(reviewId: string, token: string): Promise<strin
 
    
     const response: ReviewLikeResponse = await graphQLClient.request(likeReviewMutation, variables);
-    console.log("biisinliket", response);
     
  
     const reviewLikes: string[] = response.likeReview.likes;

@@ -34,7 +34,6 @@ export async function getReviews(userId: string): Promise<Review[]> {
             userId: userId
         };
         const data: any = await graphQLClient.request(loginUserMutation, variables);
-        console.log(data)
         const reviews: Review[] = data.reviewsByUser;
         return reviews;
 

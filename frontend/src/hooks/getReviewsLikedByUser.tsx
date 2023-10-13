@@ -34,9 +34,7 @@ export async function getReviewsLikedByUser(userId: string): Promise<Review[]> {
         const variables = {
             userId: userId
         };
-        console.log("likedit",userId)
         const data: any = await graphQLClient.request(reviewsQuery, variables);
-        console.log("likedit",data)
         const reviews: Review[] = data.reviewsLikedByUser;
         return reviews;
 
