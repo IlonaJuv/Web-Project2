@@ -10,6 +10,7 @@ import { likeReview } from '../hooks/likeReview';
 import { editReview } from '../hooks/editReview';
 import { Dropdown } from 'react-bootstrap';
 import { getReviewsLikedByUser } from '../hooks/getReviewsLikedByUser';
+import Button from 'react-bootstrap/Button';
 
 const ProfilePage: React.FC = () => {
   const userId = useParams().userId;
@@ -123,53 +124,95 @@ const ProfilePage: React.FC = () => {
         <div>
           <h1 className="text-center">{user.username}'s profile</h1>
           <h2 className="text-center">Reviews</h2>
-          <button onClick={() => setFetchLiked(true)}>Liked Reviews</button>
-          <button  onClick={() => setFetchLiked(false)}>Created Reviews</button>
-          <Dropdown>
-                    <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-                      Sort reviews by
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu>
-                      <Dropdown.Item onClick={() => {
-                        setOrderByDateNewest(true);
-                        setOrderByDateOldest(false);
-                        setOrderByLikesLeast(false);
-                        setOrderByLikesMost(false);
-                        }}>
-                        Newest to oldest
-                      </Dropdown.Item>
-                      <Dropdown.Item onClick={() => {
-                        setOrderByDateNewest(false);
-                        setOrderByDateOldest(true);
-                        setOrderByLikesLeast(false);
-                        setOrderByLikesMost(false);
-                        }}>
-                        Odest to Newest
-                      </Dropdown.Item>
-                      <Dropdown.Item onClick={() => {
-                        setOrderByDateNewest(false);
-                        setOrderByDateOldest(false);
-                        setOrderByLikesLeast(false);
-                        setOrderByLikesMost(true);
-                        }}>
-                        Most likes
-                      </Dropdown.Item>
-                      <Dropdown.Item onClick={() => {
-                        setOrderByDateNewest(false);
-                        setOrderByDateOldest(false);
-                        setOrderByLikesLeast(true);
-                        setOrderByLikesMost(false);
-                        }}>
-                        Least likes
-                      </Dropdown.Item>
-                      </Dropdown.Menu>
-                  </Dropdown>
+          <div className="d-flex ms-5">
+            <Dropdown>
+              <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                Sort reviews by
+              </Dropdown.Toggle>
+  
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  onClick={() => {
+                    setOrderByDateNewest(true);
+                    setOrderByDateOldest(false);
+                    setOrderByLikesLeast(false);
+                    setOrderByLikesMost(false);
+                  }}
+                >
+                  Newest to oldest
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setOrderByDateNewest(false);
+                    setOrderByDateOldest(true);
+                    setOrderByLikesLeast(false);
+                    setOrderByLikesMost(false);
+                  }}
+                >
+                  Odest to Newest
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setOrderByDateNewest(false);
+                    setOrderByDateOldest(false);
+                    setOrderByLikesLeast(false);
+                    setOrderByLikesMost(true);
+                  }}
+                >
+                  Most likes
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setOrderByDateNewest(false);
+                    setOrderByDateOldest(false);
+                    setOrderByLikesLeast(true);
+                    setOrderByLikesMost(false);
+                  }}
+                >
+                  Least likes
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+            {fetchLiked ? (
+              <div>
+                <Button
+                  className="ms-2 mt-1"
+                  variant="secondary"
+                  onClick={() => setFetchLiked(false)}
+                >
+                  Created
+                </Button>
+                <Button
+                  className="ms-2 mt-1"
+                  variant="primary"
+                  onClick={() => setFetchLiked(true)}
+                >
+                  Liked
+                </Button>
+              </div>
+            ) : (
+              <div>
+                <Button
+                  className="ms-2 mt-1"
+                  variant="primary"
+                  onClick={() => setFetchLiked(false)}
+                >
+                  Created
+                </Button>
+                <Button
+                  className="ms-2 mt-1"
+                  variant="secondary"
+                  onClick={() => setFetchLiked(true)}
+                >
+                  Liked
+                </Button>
+              </div>
+            )}
+          </div>
           {reviews.length > 0 ? (
             <div className="container">
-              <div className="row justify-content-center">
+              <div className="row justify-content-center mt-5">
                 {sortedReviews.map((review, index) => (
-                  
                   <ProfilePageReview
                     key={index}
                     id={review.id}
@@ -204,6 +247,7 @@ const ProfilePage: React.FC = () => {
       )}
     </div>
   );
+  
 };
 
 export default ProfilePage;
