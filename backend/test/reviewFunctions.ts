@@ -98,6 +98,7 @@ const getReviewById = (
         song: string,
         token: string
     ): Promise<ReviewTest> => {
+        console.log(title, comment, rating, song, token, "postReview");
         return new Promise((resolve, reject) => {
             request(url)
                 .post('/graphql')
@@ -105,8 +106,8 @@ const getReviewById = (
                 .set('Authorization', `Bearer ${token}`)
                 .send({
                     query: `
-                        mutation CreateReview($input: ReviewInput!) {
-                            createReview(input: $input) {
+                    mutation CreateReview($rating: Float!, $comment: String!, $title: String!, $song: ID!) {
+                        createReview(rating: $rating, comment: $comment, title: $title, song: $song) {
                                 id
                                 likes
                                 rating
@@ -131,19 +132,20 @@ const getReviewById = (
                             }
                         }
                     `,
+                    
                     variables: {
-                        input: {
-                            title: title,
-                            comment: comment,
-                            rating: rating,
-                            song: song,
-                        },
+                        rating: rating,
+                        comment: comment,
+                        title: title,
+                        song: song,
                     },
                 })
                 .expect(200, (err, response) => {
                     if (err) {
+                        console.log(response, "reviewi error")
                         reject(err);
                     } else {
+                        console.log(response.body.data.createReview, "reviewi response")
                         const createdReview = response.body.data.createReview;
                         expect(createdReview).toHaveProperty('id');
                         expect(createdReview).toHaveProperty('likes');
