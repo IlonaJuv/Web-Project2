@@ -1,5 +1,4 @@
-//import React from ' react 'username;
-//import { useNavigate } from ' react-router-dom' ;
+
 import { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
@@ -43,16 +42,18 @@ function Header() {
 
   
   return (
+    // <Navbar bg="light" expand="lg">
     <Navbar expand="lg" className={style.header}>
       <Container fluid>
-        <Navbar.Brand className={style.title} href="#">
+        
+        <Navbar.Brand className={style.title} href="#/">
           Music App
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="navbarScroll" />
-        <Navbar.Collapse id="navbarScroll">
-          <Nav
+        <Navbar.Toggle aria-controls="navbarScroll"  />
+        <Navbar.Collapse id="navbarScroll" className={style.collapse}>
+          <Nav 
             className="me-auto my-2 my-lg-0"
-            style={{ maxHeight: "100px" }}
+            style={{ maxHeight: "300px" }}
             navbarScroll
           >{user2 ? (
           <>
@@ -77,8 +78,7 @@ function Header() {
             </Button>
               
             </>
-          )}
-        
+          )}  
         </Navbar.Collapse>
       </Container>
     </Navbar>
