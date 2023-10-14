@@ -1,10 +1,10 @@
 import React from 'react';
 import { useEffect, useState } from 'react'
-import logo from './logo.svg';
+
 import '../css/App.css'
 import { getSongs } from '../hooks/getSongs';
 import Song from '../interfaces/Song';
-import User from '../interfaces/User';
+
 import { createSong } from '../hooks/createSong';
 import { Link, useNavigate } from 'react-router-dom';
 import { getReviewsBySong } from '../hooks/getReviewsBySong';
@@ -151,14 +151,12 @@ const SongSearch = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [songList, setSongList] = useState<DeezerSong[]>([]);
   const [databaseSongs, setDatabaseSongs] = useState<Song[]>([]);
-  const [showTopRatedSongs, setShowTopRatedSongs] = useState(true);
+ 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   }
   
-  const toggleShowTopRatedSongs = async () => {
-    setShowTopRatedSongs(!showTopRatedSongs);
-  };
+
 
   const sortSongsByReviews = async (songs: Song[]) => {
     const songsWithReviewCounts = [];
@@ -202,7 +200,7 @@ const SongSearch = () => {
         }));
         setSongList(result);
         setSearchQuery('');
-        setShowTopRatedSongs(false);
+        
       })
       .catch((error) => {
         console.error('Error fetching data:', error);

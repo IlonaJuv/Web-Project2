@@ -8,7 +8,6 @@ export default async <T>(
       throw new Error(json.message );
     }
     const json = await response.json();
-    console.log("fetch backend json  ", json);
     return json;
   };
   

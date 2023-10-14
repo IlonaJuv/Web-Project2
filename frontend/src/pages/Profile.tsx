@@ -33,7 +33,7 @@ const ProfilePage: React.FC = () => {
         const userData = await getUser(userId || '');
         setUser(userData);
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        throw error;
       }
     }
 
@@ -53,7 +53,7 @@ const ProfilePage: React.FC = () => {
         
         setReviews(reviewsData);
       } catch (error) {
-        console.error('Error fetching reviews:', error);
+        throw error;
       }
     }
 

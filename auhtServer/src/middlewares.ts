@@ -31,7 +31,6 @@ const authenticate = async (
   next: NextFunction
 ) => {
   try {
-    console.log('authenticate');
     // extract bearer token from header
     const bearerHeader = req.headers['authorization'];
     if (!bearerHeader || typeof bearerHeader === 'undefined') {
@@ -47,14 +46,13 @@ const authenticate = async (
       return;
     }
 
-    console.log('token', token);
     // extract user from token
     const user = jwt.verify(
       token,
       process.env.JWT_SECRET as string
     ) as OutputUser;
     // check that user is in database
-    console.log('authenticate', user);
+
     const result = await userModel.findById(user.id);
     if (result) {
       console.log(user, result);
