@@ -1,7 +1,5 @@
 import express from 'express';
 import {
-  //check,
-  //checkToken,
   userGetByUsername,
   userDelete,
   userGet,
@@ -19,10 +17,6 @@ router
   .post(userPost)
   .put(authenticate, userPut)
   .delete(authenticate, userDelete);
-
-//router.get('/token', authenticate, checkToken);
-
-//router.route('/check').get(check);
 
 router.route('/:id').get(userGet);
 
