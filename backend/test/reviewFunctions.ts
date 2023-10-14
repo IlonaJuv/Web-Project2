@@ -142,10 +142,10 @@ const getReviewById = (
                 })
                 .expect(200, (err, response) => {
                     if (err) {
-                        console.log(response, "reviewi error")
+                      
                         reject(err);
                     } else {
-                        console.log(response.body.data.createReview, "reviewi response")
+                       
                         const createdReview = response.body.data.createReview;
                         expect(createdReview).toHaveProperty('id');
                         expect(createdReview).toHaveProperty('likes');

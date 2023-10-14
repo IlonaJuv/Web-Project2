@@ -12,7 +12,7 @@ export default {
     Query: {
     songs: async () => {
      try {
-        console.log("songs")
+       
         return await songModel.find();
      } catch (error) {
         throw new Error(error);

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import User from '../interfaces/User'
 
 import { login, register } from '../graphql/queries'
