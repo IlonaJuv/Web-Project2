@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import { likeReview } from '../../hooks/likeReview';
-import { editReview } from '../../hooks/editReview';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
@@ -34,7 +32,6 @@ const ProfilePageReview: React.FC<ProfilePageReviewProps> = (props) => {
     id,
     album,
     song_name,
-    song_genres,
     song_artist,
     song_thumbnail,
     song_id,

@@ -25,7 +25,6 @@ export default {
             return reviews;
         },
         reviewsByUsername: async (_parent: undefined, args: { username: string }) => {
-            console.log("Useri: ", args.username)
             const users = await fetchData<AuthMessageResponse>(
                 `${process.env.AUTH_URL}/users/username/${args.username}`
               );
@@ -51,12 +50,12 @@ export default {
     },
     Mutation: {
         createReview: async (_parent: undefined, args: Review, user: UserIdWithToken) => {
-            console.log("Review resolver");
+            
             if (!user.token) {
                 throw new GraphQLError('You are not authorized to perform this action');
             }
             args.user = user.id as unknown as Types.ObjectId;
-            console.log(args);
+           
             const newReview = new ReviewModel(args);
             return await newReview.save();
         },

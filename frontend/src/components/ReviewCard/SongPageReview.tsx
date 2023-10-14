@@ -26,8 +26,6 @@ interface SongPageReviewProps {
 const SongPageReview: React.FC<SongPageReviewProps> = (props) => {
   const {
     id,
-    song_name,
-    artist,
     rating,
     title,
     comment,

@@ -131,9 +131,7 @@ const SongPage: React.FC = () => {
     fetchReviews();
   }, [songId]);
 
-  const isTitleValid = newReview.title.length >= 1 && newReview.title.length <= 50;
-  const isTextValid = newReview.text.length >= 1 && newReview.text.length <= 250;
-  const isFormValid = isTitleValid && isTextValid;
+  
 
   const filteredReviews = reviews.filter((review) =>
     review.user.username.toLowerCase().includes(searchQuery.toLowerCase())

@@ -59,7 +59,6 @@ const userPost = async (
 
 const userListGet = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log('userListGet');
     const users = await userModel.find().select('-password -__v');
     const response: DBMessageResponse = {
       message: 'Users found',
@@ -165,7 +164,6 @@ const userGetByUsername = async (
   next: NextFunction
 ) => {
   try {
-    console.log('userGetByUsername');
     const {username} = req.params;
 
     const regex = new RegExp(username, 'i'); // 'i' flag makes it case-insensitive
