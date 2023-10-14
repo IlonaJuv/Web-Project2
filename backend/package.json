@@ -6,7 +6,9 @@
   "scripts": {
     "test": "jest --detectOpenHandles --forceExit",
     "start": "ts-node src/index.ts",
-    "dev": "nodemon src/index.ts"
+    "dev": "nodemon src/index.ts",
+    "build": "tsc"
+
   },
   "author": "",
   "license": "ISC",
