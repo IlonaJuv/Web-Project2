@@ -10,6 +10,22 @@ nav .title {
   font-size: 50px !important;
 }
 
+
+@media (min-width: 990px) {
+  .collapse   {
+    display: flex !important;
+    flex-basis: auto;
+  }
+}
+
+.collapse {
+  flex-basis: 0%;
+  flex-grow: 1;
+  align-items: flex-end;
+  display: inline-grid;
+  justify-content: end;
+}
+
 nav .link {
   font-size: 18px;
   padding: 8px;
