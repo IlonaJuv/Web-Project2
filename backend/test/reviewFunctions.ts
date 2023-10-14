@@ -98,7 +98,7 @@ const getReviewById = (
         song: string,
         token: string
     ): Promise<ReviewTest> => {
-        console.log(title, comment, rating, song, token, "postReview");
+       
         return new Promise((resolve, reject) => {
             request(url)
                 .post('/graphql')
