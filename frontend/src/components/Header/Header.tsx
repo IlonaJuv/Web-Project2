@@ -12,7 +12,6 @@ import { logout } from "../../redux/userReducer";
 import { useAppDispatch, useAppSelector } from "../../hooks/appHooks";
 import User from "../../interfaces/User";
 import { useNavigate } from 'react-router-dom';
-import { Link } from "react-router-dom";
 
 
 function Header() {

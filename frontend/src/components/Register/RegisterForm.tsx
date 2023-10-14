@@ -12,8 +12,6 @@ const RegisterForm = () => {
     const [password, setPassword] = useState("");
     const [confirmpassword, setConfirmpassword] = useState("");
 
-   // const [error, setError] = useState(null)
-    const [isLoading, setIsLoading] = useState(false)
     const [showAlert, setShowAlert] = useState(false);
 
     const { error } = useAppSelector((state: any) => state.user);
@@ -75,7 +73,7 @@ const RegisterForm = () => {
            onChange={(e) => setConfirmpassword(e.target.value)} 
            value={confirmpassword} 
            />
-          <button className={style.formBtn} disabled={isLoading}>Register</button>
+          <button className={style.formBtn}>Register</button>
         </form>
         {showAlert && (
           <Alert variant="danger" className="mt-1">

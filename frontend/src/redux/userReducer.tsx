@@ -1,10 +1,9 @@
 
 /* eslint-disable no-unused-vars */
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import User from '../interfaces/User';
 import { RootState } from "../redux/store";
 import { signup, signin } from '../services/userService';
-import { LoginResponse } from '../interfaces/Responses';
 const storedUser = (localStorage.getItem('user'));
 const storedToken = localStorage.getItem('token');
 

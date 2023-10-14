@@ -3,14 +3,12 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/appHooks";
 import { signin } from "../../services/userService";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { Alert } from "react-bootstrap";
 
 
 const LoginForm = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [isLoading, setIsLoading] = useState(false)
     const [showAlert, setShowAlert] = useState(false);
 
     const { error } = useAppSelector((state: any) => state.user);
@@ -60,7 +58,7 @@ const LoginForm = () => {
           <p className={style.pageLink}>
             <span className={style.pageLinkLabel}>Forgot Password?</span>
           </p>
-          <button className={style.formBtn} disabled={isLoading}>Log in</button>
+          <button className={style.formBtn}>Log in</button>
         </form>
         {showAlert && (
           <Alert variant="danger" className="mt-1">
