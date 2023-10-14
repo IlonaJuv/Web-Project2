@@ -11,9 +11,9 @@ const Welcome = () => {
           <div className={`${welcome.texts} d-none d-sm-block`}>
             <h2 style={{ textTransform: "uppercase" }}>Welcome</h2>
             <p className={welcome.paragraph}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore
-              fugiat animi laboriosam veritatis quibusdam in quis rem eius quas
-              corporis!
+              Welcome to the Music App! This is a place where you can share reviews from your
+              favorite songs with your friends and family. You can also discover new
+              songs and artists. Enjoy!
             </p>
           </div>
         </div>
