@@ -55,9 +55,6 @@ const LoginForm = () => {
            onChange={(e) => setPassword(e.target.value)} 
            value={password} 
            />
-          <p className={style.pageLink}>
-            <span className={style.pageLinkLabel}>Forgot Password?</span>
-          </p>
           <button className={style.formBtn}>Log in</button>
         </form>
         {showAlert && (
