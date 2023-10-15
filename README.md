@@ -1,6 +1,6 @@
 # Web-Project2
 ## App
-- https://web-project2-1idt.vercel.app/#/login
+- https://web-project2-1idt.vercel.app/
 ## What?
 - a user-friendly online platform designed to cater to music enthusiasts, providing them with a space where they can passionately share their thoughts, ratings, engaging discussions, and detailed reviews about the albums and songs they enjoy.
 ## Who?
